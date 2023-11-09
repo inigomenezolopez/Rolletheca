@@ -57,9 +57,9 @@
                     <h3>Información de Contacto</h3>
                 </div>
                 <div class="card-body">
-                    <p><strong>Dirección:</strong> Calle Ejemplo, 123, Ciudad</p>
-                    <p><strong>Teléfono:</strong> (123) 456-7890</p>
-                    <p><strong>Correo Electrónico:</strong> contacto@ejemplo.com</p>
+                    <p><strong>Dirección:</strong> Calle Rubiales, 132, Torre de Cotillas, Murcia</p>
+                    <p><strong>Teléfono:</strong> 638124234</p>
+                    <p><strong>Correo Electrónico:</strong> admin@hotmail.com</p>
                     <p><strong>Horario de Atención:</strong> Lunes a Viernes de 9:00 a 18:00</p>
                 </div>
             </div>

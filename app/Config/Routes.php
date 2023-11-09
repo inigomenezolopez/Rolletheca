@@ -39,10 +39,15 @@ $routes->group('', ['namespace' => 'App\Controllers\Dashboard'], function($route
     $routes->get('usuario/login','\App\Controllers\Dashboard\usuario::login', ['as'=> 'usuario.login']);
     $routes->post('usuario/login_post','\App\Controllers\Dashboard\usuario::login_post', ['as'=> 'usuario.login_post']);
 
+    $routes->get('recuperar-contrasena', 'Usuario::solicitarRestablecimientoContrasena');
+$routes->post('recuperar-contrasena', 'Usuario::procesarSolicitudRestablecimiento');
+$routes->get('restablecer-contrasena/(:any)', 'Usuario::mostrarFormularioRestablecimiento/$1');
+$routes->post('restablecer-contrasena-proceso', 'Usuario::procesarRestablecimientoContrasena');
+
     $routes->get('usuario/register','\App\Controllers\Dashboard\usuario::register', ['as'=> 'usuario.register']);
     $routes->post('usuario/register_post','\App\Controllers\Dashboard\usuario::register_post', ['as'=> 'usuario.register_post']);
     $routes->get('usuario/logout','\App\Controllers\Dashboard\usuario::logout', ['as'=> 'usuario.logout']);
-    $routes->post('usuario/mensaje','\App\Controllers\Dashboard\usuario::enviarmensaje', ['as'=> 'usuario.mensaje_post']);
+    $routes->post('usuario/mensaje','\App\Controllers\Dashboard\contacto::enviarmensaje', ['as'=> 'usuario.mensaje_post']);
 
     $routes->get('acerca-de','\App\Controllers\Dashboard\Acercade::index', ['as' => 'acercade.index']);
     $routes->get('politica-privacidad','\App\Controllers\Dashboard\Acercade::politica', ['as' => 'acercade.politica']);
@@ -55,14 +60,17 @@ $routes->group('', ['namespace' => 'App\Controllers\Dashboard'], function($route
 
     // Ruta para ver el formulario de creación de un nuevo artículo
     $routes->get('categoria/crear', 'categoria::new');
-
+    
     // Ruta para guardar el nuevo artículo (después de enviar el formulario)
     $routes->post('categoria/guardar', 'categoria::create');
     $routes->get('/libro/etiquetas/(:num)', 'libreria::etiquetasPorCategoria/$1');
-    $routes->post('comentarios/agregar', 'libreria::agregar');
-    $routes->get('comentarios/editar/(:segment)', 'Comentario::editar/$1');
-    $routes->post('comentarios/actualizar/(:num)', 'Comentario::actualizar/$1', ['filter' => 'auth']);
-    $routes->get('comentarios/borrar/(:segment)', 'Comentario::borrar/$1');
+
+    $routes->post('comentarios/agregar', 'comentario::agregar');
+    $routes->get('/libreria/editar/comentario/(:num)', 'Comentario::editar/$1');
+    $routes->post('/libreria/actualizar/comentario/(:num)', 'Comentario::actualizar/$1');
+    $routes->post('comentario/borrar/(:num)', 'Comentario::borrar/$1');
+
+    $routes->get('libreria/filtrarPorEtiquetas', 'Libreria::filtrarPorEtiquetas');
 
     // Ruta para ver el detalle de un artículo específico (por ID)
     $routes->get('categoria/ver/(:num)', 'categoria::show/$1');

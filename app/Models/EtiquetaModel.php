@@ -39,8 +39,6 @@ class EtiquetaModel extends Model
     protected $afterDelete    = [];
 
 
-    public function obtenerEtiquetasPorCategoria($idCategoria)
-{
-    return $this->where('id_categoria', $idCategoria)->findAll();
-}
+   
+    
 }

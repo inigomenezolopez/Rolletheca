@@ -43,7 +43,7 @@ class LibreriaModel extends Model
     public function getLibreriasByCategoria($categoriaName) {
         $this->db->select('*');
         $this->db->from('librerias');
-        $this->db->join('categorias', 'categorias.id_categoria = librerias.id_categoria');
+        $this->db->join('categorias', 'categorias.id = librerias.id_categoria'); // Corregido aquí
         $this->db->where('categorias.nombre', $categoriaName);
         $query = $this->db->get();
         return $query->result();
@@ -53,4 +53,31 @@ public function valoracionMedia($id) {
     $query = $this->db->query('SELECT AVG(valoracion) as media FROM comentarios WHERE id_libro = ?', $id);
     return $query->getRow()->media;
 }
+
+public function filtrarPorEtiquetasCategoria($etiquetasSeleccionadas, $idCategoria)
+{
+    // Inicia la consulta con la tabla de libros y su categoría correspondiente
+    $builder = $this->table('librerias');
+    $builder->select('librerias.*, categorias.nombre AS categoria');
+    $builder->join('categorias', 'categorias.id = librerias.id_categoria');
+    $builder->where('librerias.id_categoria', $idCategoria);
+
+    // Si hay etiquetas seleccionadas, añade las condiciones necesarias para el filtrado
+    if (!empty($etiquetasSeleccionadas)) {
+        $countEtiquetas = count($etiquetasSeleccionadas);
+        $builder->join('libro_etiqueta', 'libro_etiqueta.id_libro = librerias.id');
+        $builder->join('etiquetas', 'etiquetas.id = libro_etiqueta.id_etiqueta');
+        $builder->whereIn('etiquetas.id', $etiquetasSeleccionadas);
+        $builder->groupBy('librerias.id');
+        $builder->having('COUNT(DISTINCT etiquetas.id) =', $countEtiquetas);
+    }
+
+    return $this->paginate(12);
+
+    
 }
+    
+    
+}
+
+

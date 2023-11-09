@@ -115,6 +115,9 @@ form{
 					<div class="row">
 						<p>¿No tienes cuenta? <a href="<?= route_to('usuario.register')?>">Registrate aquí</a></p>
 					</div>
+					<div class="row">
+    				<p>¿Olvidaste tu contraseña? <a href="<?= base_url('recuperar-contrasena') ?>">Restablecer contraseña</a></p>
+					</div>
 				</div>
 			</div>
 		</div>

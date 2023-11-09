@@ -45,10 +45,34 @@ class Validation extends BaseConfig
 
 
    public $librerias = [
-    'titulo' => 'required|min_length[3]|max_length[255]',
-    'descripcion' => 'required|min_length[3]|max_length[2000]',
-    'id_categoria' => 'required|is_natural'
-   ];
+    'titulo' => [
+        'label' => 'Titulo',
+        'rules' => 'required|min_length[3]|max_length[255]',
+        'errors' => [
+            'required' => 'El campo {field} es obligatorio.',
+            'min_length' => 'El campo {field} debe tener al menos {param} caracteres de longitud.',
+            'max_length' => 'El campo {field} no puede exceder los {param} caracteres de longitud.',
+            
+        ],
+    ],
+    'descripcion' => [
+    'label' => 'descripcion',
+    'rules' => 'required|min_length[3]|max_length[2000]',
+    'errors' => [
+        'required' => 'El campo {field} es obligatorio.',
+        'min_length' => 'El campo {field} debe tener al menos {param} caracteres de longitud.',
+        'max_length' => 'El campo {field} no puede exceder los {param} caracteres de longitud.',
+        
+    ],
+],
+    'id_categoria' => [
+    'label' => 'categoria',
+    'rules' => 'required',
+    'errors' => [
+        'required' => 'Selecciona una {field} ',
+    ],
+],
+];
 
    public $usuarios = [
     'usuario' => [
@@ -83,9 +107,42 @@ class Validation extends BaseConfig
     * @var array
     */
    public $categorias = [
-    'nombre' => 'required|min_length[3]|max_length[60]',
-    'descripcion' => 'required|min_length[3]|max_length[300]'
-   ];
-  
+    'nombre' => [
+    'label' => 'categoria',
+    'rules' => 'required|min_length[3]|max_length[40]',
+    'errors' => [
+        'required' => 'El campo {field} es obligatorio.',
+        'min_length' => 'El campo {field} debe tener al menos {param} caracteres de longitud.',
+        'max_length' => 'El campo {field} no puede exceder los {param} caracteres de longitud.',
+        
+    ], 
+],
+    'descripcion'  =>[
+    'label' => 'descripcion',
+    'rules' => 'required|min_length[3]|max_length[300]',
+    'errors' => [
+        'required' => 'El campo {field} es obligatorio.',
+        'min_length' => 'El campo {field} debe tener al menos {param} caracteres de longitud.',
+        'max_length' => 'El campo {field} no puede exceder los {param} caracteres de longitud.',
+],
+],
+];
+   public $comentarioReglas =  [
+    'contenido' => [
+        'rules' => 'required|min_length[3]',
+        'errors' => [
+            'required' => 'El campo contenido es obligatorio.',
+            'min_length' => 'El campo contenido debe tener al menos 3 caracteres de longitud.',
+        ],
+    ],
+    'valoracion' => [
+        'rules' => 'required|numeric|greater_than[0]',
+        'errors' => [
+            'required' => 'El campo valoración es obligatorio.',
+            
+        ],
+    ],
+    
+];
 
 }

@@ -33,7 +33,7 @@
         <div class="col-12">
             <h1 class="display-4 text-center" ><?= esc($libro->titulo)  ?></h1>
             <br>
-            <!-- Imagen del libro centrada con tamaño definido -->
+            <hr>
             <div class="text-center">
                 <img src="/images/libreria/<?= esc($libro->ruta_archivo)?>" class="img-fluid libro-imagen" alt="Imagen del libro" style="max-width: 100%; height: auto;">
             </div>
@@ -63,7 +63,7 @@
 
                 <div class="mb-3">
                     <label for="contenido" class="form-label">Comentario:</label>
-                    <textarea id="contenido" name="contenido" class="form-control" required></textarea>
+                    <textarea id="contenido" name="contenido" class="form-control" value="<?= old('contenido') ?>"  required></textarea>
                 </div>
 
                 
@@ -95,20 +95,18 @@
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
-                                    
+                                <div class="card-text" id="vista-comentario-<?= $comentario->id ?>"><?= esc($comentario->contenido) ?></p>
+                                
 
-                                      <!-- Formulario de edición oculto -->
-                            <div id="formulario-edicion-<?= $comentario->id ?>" style="display: none;">
-                             <textarea id="contenido-editar-<?= $comentario->id ?>" class="form-control"><?= esc($comentario->contenido) ?></textarea>
-                            <button onclick="guardarEdicion(<?= $comentario->id ?>)" class="btn btn-success btn-sm">Guardar</button>
-                            <button onclick="cancelarEdicion(<?= $comentario->id ?>)" class="btn btn-secondary btn-sm">Cancelar</button>
-                            </div>
-                                    <br>
-                                   <!-- Botones de edición y eliminación que siempre se muestran -->
-                            <div class="card-text" id="vista-comentario-<?= $comentario->id ?>"><?= esc($comentario->contenido) ?></p>
-                             <button onclick="mostrarFormularioEdicion(<?= $comentario->id ?>)" class="btn btn-primary btn-sm">Editar</button>
-                            <button onclick="eliminarComentario(<?= $comentario->id ?>)" class="btn btn-danger btn-sm">Borrar</button>
+                                <?php $usuarioSesion = session()->get('usuario'); ?>
+                        <?php if ($usuarioSesion->id == $comentario->id_usuario || $usuarioSesion->rol == 'admin'): ?>
+                            <a href="<?= site_url('/libreria/editar/comentario/' . $comentario->id) ?>" class="btn btn-primary btn-sm mr-2">Editar</a>
+<form action="<?= site_url('comentario/borrar/' . $comentario->id) ?>" method="post" class="d-inline">
+    <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
+</form>
+                            <?php endif; ?>
                                 </div>
+                                
                                     </div>
                             </div>
                         </div>
@@ -141,48 +139,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// Función para mostrar el formulario de edición
-function mostrarFormularioEdicion(idComentario) {
-    document.getElementById('vista-comentario-' + idComentario).style.display = 'none';
-    document.getElementById('formulario-edicion-' + idComentario).style.display = 'block';
-}
 
-// Función para cancelar la edición de un comentario
-function cancelarEdicion(idComentario) {
-    document.getElementById('vista-comentario-' + idComentario).style.display = 'block';
-    document.getElementById('formulario-edicion-' + idComentario).style.display = 'none';
-}
-
-// Función para guardar la edición de un comentario
-function guardarEdicion(idComentario) {
-    var contenidoEditado = document.getElementById('contenido-editar-' + idComentario).value;
-    
-    // Aquí haces el fetch al servidor
-    fetch('/comentarios/actualizar/' + idComentario, {
-        method: 'POST', // Puede ser POST o PUT, dependiendo de tu backend
-        headers: {
-            'Content-Type': 'application/json',
-            // Incluye más headers si son necesarios (como tokens de autenticación)
-        },
-        body: JSON.stringify({
-            id: idComentario,
-            contenido: contenidoEditado
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json();
-    })
-    .then(data => {
-        // Aquí actualizas el DOM con el comentario editado
-        document.getElementById('vista-comentario-' + idComentario).querySelector('.card-text').textContent = contenidoEditado;
-        cancelarEdicion(idComentario); // Esto ocultará el formulario de edición
-    })
-    .catch(error => {
-        console.error('There has been a problem with your fetch operation:', error);
-    });
-}
 </script>
 <?= $this->endSection() ?>

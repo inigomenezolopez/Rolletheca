@@ -39,18 +39,20 @@
 
                 <div >
     <label for="imagen" class="form-label">Actualizar Imagen</label>
-    <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
+    
+    <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*" value="<?=$usuario->imagen?>">
     <br>
-    <div class="mb-1 " style="background-color: #cbdbe5;">
-            <div id="vistaPrevia" class="d-flex justify-content-center align-items-center" style="width: 100%; height: 300px; overflow: hidden; border: 1px solid #ced4da; border-radius: .375rem;">
-                <img id="imagenRecorte" src="<?= esc($usuario->imagen ? base_url('/images/usuario/' . $usuario->imagen) : base_url('/images/usuario/img_predeterminada.png')) ?>" alt="Vista previa" style="max-width: 100%; max-height: 100%;">
-            </div>
-        </div>
+    
+    
+        <img id="imagenRecorte" src="<?= esc($usuario->imagen ? base_url('/images/usuario/' . $usuario->imagen) : base_url('/images/usuario/img_predeterminada.png')) ?>" alt="Vista previa" style="display: none; max-width: 100%; max-height: 100%;">
+        <br>
+        
     <input type="hidden" id="x" name="x">
     <input type="hidden" id="y" name="y">
     <input type="hidden" id="width" name="width">
     <input type="hidden" id="height" name="height">
 </div>
+
                 <button type="submit" class="btn btn-primary">Guardar Cambios</button>
             </form>
         </div>
@@ -59,10 +61,11 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    var imagen = document.getElementById('imagen');
-    var vistaPrevia = document.getElementById('vistaPrevia');
-    var imagenRecorte = document.getElementById('imagenRecorte');
+    var imagen = document.getElementById('imagen'); // Input del archivo
+    var vistaPrevia = document.getElementById('vistaPrevia'); // Contenedor de la vista previa
+    var imagenRecorte = document.getElementById('imagenRecorte'); // Imagen de vista previa
     var cropper;
+
     imagen.addEventListener('change', function (event) {
         var archivos = event.target.files;
         if (archivos && archivos.length > 0) {
@@ -72,19 +75,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 reader.onload = function () {
                     imagenRecorte.src = reader.result;
                     if (cropper) {
-                        cropper.destroy();
+                        cropper.destroy(); // Destruye la instancia anterior de Cropper
                     }
                     cropper = new Cropper(imagenRecorte, {
-                        aspectRatio: 1, // Puedes cambiar la relación de aspecto según tus necesidades
+                        aspectRatio: 1,
                         viewMode: 1,
                         crop: function (event) {
+                            // Actualiza los valores de los campos de recorte
                             document.getElementById('x').value = event.detail.x;
                             document.getElementById('y').value = event.detail.y;
                             document.getElementById('width').value = event.detail.width;
                             document.getElementById('height').value = event.detail.height;
                         }
                     });
-                    vistaPrevia.style.display = 'block';
+                    imagenRecorte.style.display = 'block'; // Muestra la vista previa
                 };
                 reader.readAsDataURL(archivo);
             } else {
@@ -92,6 +96,17 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
+
+    // Opción de confirmación de recorte (asegúrese de que este botón exista en su HTML)
+    var botonConfirmar = document.getElementById('confirmarRecorte'); // Reemplazar con el ID real de tu botón
+    if (botonConfirmar) {
+        botonConfirmar.addEventListener('click', function() {
+            // Enviar datos de recorte al servidor y manejar la respuesta aquí...
+
+            // Oculta la vista previa independientemente del resultado del recorte
+            imagenRecorte.style.display = 'none';
+        });
+    }
 });
 </script>
 <?= $this->endSection() ?>

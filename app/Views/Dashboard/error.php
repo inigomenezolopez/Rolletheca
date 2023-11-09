@@ -1,18 +1,7 @@
-<?php 
-if ($validation = session()->getFlashdata('validation')) {
-    if (is_array($validation)) {
-        echo '<div class="alert alert-danger">';
-        foreach ($validation as $error) {
-            echo '<p>' . esc($error) . '</p>';
-        }
-        echo '</div>';
-    } elseif (method_exists($validation, 'getErrors')) {
-        echo '<div class="alert alert-danger">';
-        foreach ($validation->getErrors() as $error) {
-            echo '<p>' . esc($error) . '</p>';
-        }
-        echo '</div>';
-    }
-}
-?>
-
+<?php if (session()->getFlashdata('errors')): ?>
+    <div class="alert alert-danger">
+        <?php foreach (session()->getFlashdata('errors') as $error): ?>
+            <p><?= esc($error) ?></p>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>

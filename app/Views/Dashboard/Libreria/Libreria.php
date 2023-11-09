@@ -12,6 +12,7 @@
 <?php endif; ?>
 
 <div class="row">
+
     <?php foreach ($libros as $libro): ?>
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100 border border-1 shadow-sm">

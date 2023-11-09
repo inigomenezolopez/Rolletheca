@@ -48,26 +48,31 @@
     </div>
 </div>
 <script>
-document.getElementById('id_categoria').addEventListener('change', function() {
+    document.getElementById('id_categoria').addEventListener('change', function() {
     cargarEtiquetas(this.value);
 });
-
 function cargarEtiquetas(idCategoria) {
+    
     const etiquetasSelect = document.getElementById('etiquetas');
-    etiquetasSelect.innerHTML = '';
+    
+    // Asegúrate de que el contenedor esté vacío antes de agregar nuevas opciones
+    etiquetasSelect.innerHTML = ''; // Esto debería eliminar las opciones existentes
 
-    if (!idCategoria) {
-        return; // No se seleccionó categoría
-    }
-
+    if (!idCategoria) return; // Si no hay categoría seleccionada, no hacer nada
+    
+    // Proceso de obtención y añadido de nuevas opciones
     fetch('/libro/etiquetas/' + idCategoria)
         .then(response => response.json())
         .then(data => {
+            console.log(data);
             data.forEach(etiqueta => {
+                
                 const option = document.createElement('option');
                 option.value = etiqueta.id;
                 option.text = etiqueta.nombre;
+                // Añadir la nueva opción al select de etiquetas
                 etiquetasSelect.appendChild(option);
+                
             });
         })
         .catch(error => {
@@ -76,5 +81,6 @@ function cargarEtiquetas(idCategoria) {
         });
 }
 </script>
+
 
 <?= $this->endSection() ?>

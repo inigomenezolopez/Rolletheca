@@ -8,7 +8,27 @@
             <p><i><?= esc($categoria->descripcion) ?></i></p>
     </div>
     
-    <hr>
+    <!-- Botón para mostrar/ocultar el filtro de etiquetas -->
+<button class="btn btn-info mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#filtroEtiquetas" aria-expanded="false" aria-controls="filtroEtiquetas">
+    Filtrar por etiquetas
+</button>
+
+<!-- Contenedor desplegable para las opciones de filtrado -->
+<div class="collapse" id="filtroEtiquetas">
+    <form action="<?= site_url('categoria/ver/' . $categoria->id) ?>" method="get">
+        <div class="mb-3">
+            <?php foreach($todasLasEtiquetas as $etiqueta): ?>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="etiquetas[]" value="<?= esc($etiqueta->id) ?>" id="etiqueta<?= $etiqueta->id ?>">
+                    <label class="form-check-label" for="etiqueta<?= $etiqueta->id ?>"><?= esc($etiqueta->nombre) ?></label>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <button type="submit" class="btn btn-primary">Aplicar Filtro</button>
+    </form>
+</div>
+
+<hr>
 
     <div class="row">
     <?php foreach ($libros as $libro): ?>
@@ -48,6 +68,6 @@
 
     <?= $pager->links() ?>
 
-</div> <!-- container -->
+</div> 
 
 <?= $this->endSection() ?>

@@ -20,43 +20,63 @@ class Libreria extends BaseController
      * @return string
      */
     public function index()
-    {   
-        $libreriaModel = new LibreriaModel;
-        $libroEtiquetaModel = new LibreriaEtiquetaModel(); // Este modelo debería manejar las operaciones en la tabla libro_etiqueta
-    
-        // Obtener los libros con su categoría correspondiente
+{   
+    $libreriaModel = new LibreriaModel();
+    $libroEtiquetaModel = new LibreriaEtiquetaModel();
+    $etiquetaModel = new \App\Models\EtiquetaModel(); // Modelo para las etiquetas
+
+    // Verifica si hay parámetros de filtro de etiquetas y aplica el filtro si es necesario
+    $etiquetasSeleccionadas = $this->request->getGet('etiquetas') ?? [];
+    if (!empty($etiquetasSeleccionadas)) {
+        // Aplicar el filtrado de libros por las etiquetas seleccionadas
+        // Asumiendo que tienes un método en tu modelo llamado `filtrarPorEtiquetas`
+        // que todavía necesitas definir.
+        $libros = $libreriaModel->filtrarPorEtiquetas($etiquetasSeleccionadas);
+    } else {
+        // Si no hay etiquetas seleccionadas, obtener todos los libros sin filtrar
         $libreriaModel->select('librerias.*, categorias.nombre AS categoria')
                       ->join('categorias', 'categorias.id = librerias.id_categoria');
         $libros = $libreriaModel->paginate(12);
-    
-        // Calcular la valoración media para cada libro
-        foreach ($libros as $key => $libro) {
-            $libros[$key]->valoracionMedia = $libreriaModel->valoracionMedia($libro->id);
-    
-            // Obtener las etiquetas para cada libro
-            $etiquetas = $libroEtiquetaModel->where('id_libro', $libro->id)
-                                            ->join('etiquetas', 'etiquetas.id = libro_etiqueta.id_etiqueta')
-                                            ->findAll();
-            $libros[$key]->etiquetas = $etiquetas;
-        }
-    
-        $data['libros'] = $libros;
-        $data['pager'] = $libreriaModel->pager;
-    
-        return view('Dashboard/Libreria/libreria', $data);
     }
+
+    // Calcular la valoración media para cada libro y obtener sus etiquetas
+    foreach ($libros as $key => $libro) {
+        $libros[$key]->valoracionMedia = $libreriaModel->valoracionMedia($libro->id);
+        $etiquetas = $libroEtiquetaModel->where('id_libro', $libro->id)
+                                        ->join('etiquetas', 'etiquetas.id = libro_etiqueta.id_etiqueta')
+                                        ->findAll();
+        $libros[$key]->etiquetas = $etiquetas;
+    }
+
+    // Obtener todas las etiquetas para mostrar en el filtro
+    $todasLasEtiquetas = $etiquetaModel->findAll();
+
+    // Pasar los datos a la vista
+    $data = [
+        'libros' => $libros,
+        'pager' => $libreriaModel->pager,
+        'todasLasEtiquetas' => $todasLasEtiquetas, // Añadir las etiquetas al array de datos
+        'etiquetasSeleccionadas' => $etiquetasSeleccionadas,
+    ];
+
+    return view('Dashboard/Libreria/libreria', $data);
+}
+
 
     
     public function new()
     {
         $etiquetaModel = new EtiquetaModel;
         $categoriaModel = new CategoriaModel;
-        return view('Dashboard/Libreria/crear',[
-            'libreria'=> new LibreriaModel(),
-            'categoria'=> $categoriaModel->find(),
-            'etiqueta'=> $etiquetaModel->find()
+        $etiquetas = $etiquetaModel->find();
 
-        ]);
+
+// Pasar a la vista
+return view('Dashboard/Libreria/crear',[
+    'libreria'=> new LibreriaModel(),
+    'categoria'=> $categoriaModel->find(),
+    'etiqueta'=> $etiquetas
+]);
 
     }
 
@@ -65,6 +85,7 @@ class Libreria extends BaseController
         if ($this->validate('librerias')) {
             $libreriaModel = new LibreriaModel;
             $libroEtiquetaModel = new LibreriaEtiquetaModel(); // Asegúrate de que este modelo existe y está correctamente definido
+            $nuevoNombre = $this->request->getPost('ruta_archivo_actual');
 
             $img = $this->request->getFile('imagen');
         if ($img->isValid() && !$img->hasMoved()) {
@@ -78,7 +99,7 @@ class Libreria extends BaseController
                 'id_categoria' => $this->request->getPost('id_categoria'),
                 'ruta_archivo' => $nuevoNombre, // Asumiendo que también manejas una carga de archivos
             ]);
-    
+            
             // Verificar si se recibieron etiquetas
             $etiquetasSeleccionadas = $this->request->getPost('etiquetas');
             if ($etiquetasSeleccionadas) {
@@ -94,14 +115,20 @@ class Libreria extends BaseController
             session()->setFlashdata('mensaje', 'Datos guardados exitosamente');
             return redirect()->to('/libreria');
         } else {
-            session()->setFlashdata([
-                'validation' => $this->validator->listErrors()
-            ]);
-            return redirect()->back()->withInput();
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
     }
     }
-  
+    public function filtrarPorEtiquetas()
+    {
+        $etiquetasSeleccionadas = $this->request->getGet('etiquetas') ?? [];
+        $libroModel = new \App\Models\LibroModel();
+    
+        $libros = $libroModel->filtrarPorEtiquetas($etiquetasSeleccionadas);
+        
+        // Genera la vista parcial y devuelve solo ese HTML
+        return view('libreria/partials/_libros', ['libros' => $libros]);
+    }
     public function show($id = null)
 {
     // Modelos
@@ -119,7 +146,7 @@ class Libreria extends BaseController
     $etiquetas = $libroEtiquetaModel->where('id_libro', $id)
                                      ->join('etiquetas', 'etiquetas.id = libro_etiqueta.id_etiqueta')
                                      ->findAll();
-    $libro->etiquetas = $etiquetas; // Asegúrate de que la entidad 'libro' sea capaz de almacenar propiedades dinámicas
+    $libro->etiquetas = $etiquetas; 
 
     // Pasando datos a la vista
    // Pasando datos a la vista
@@ -130,38 +157,41 @@ class Libreria extends BaseController
     'etiquetas'=> $etiquetas
 ]);
 }
-    public function agregar()
-    {
-        $comentarioModel = new ComentarioModel();
-    
-        // Verificar si el usuario está en la sesión
-        $usuario = session()->get('usuario');
-        if ($usuario && isset($usuario->id)) {
-            $data = [
-                'id_libro' => $this->request->getPost('id_libro'),
-                'id_usuario' => $usuario->id,
-                'contenido' => $this->request->getPost('contenido'),
-                'fecha_publicacion' => Time::now(),
-                'valoracion'=> $this->request->getPost('valoracion')
-            ];
-    
-            $comentarioModel->insert($data);
-    
-            return redirect()->to('/libreria/ver/'. $data['id_libro']);
-        } else {
-            session()->setFlashdata('mensaje', 'Debes estar logueado para comentar');
-            return redirect()->to(route_to('usuario.login'));
-        }
-    }
+   
     public function edit($id = null)
-    {
-        $libreriaModel = new LibreriaModel;
-        $categoriaModel = new CategoriaModel;
-       echo view('Dashboard/Libreria/editar',[
-        'libros' => $libreriaModel->find($id),
-        'categoria' => $categoriaModel->find()
-       ]);
-    }
+{
+    $libreriaModel = new LibreriaModel;
+    $categoriaModel = new CategoriaModel;
+    $etiquetaModel = new EtiquetaModel; // Asumiendo que tienes un modelo para 'Etiquetas'
+    $libroEtiquetaModel = new LibreriaEtiquetaModel;
+
+    $libro = $libreriaModel->find($id);
+   
+
+    // Obtener la categoría del libro
+    $categoria = $categoriaModel->find($libro->id_categoria);
+
+    // Ahora, necesitas obtener las etiquetas que pertenecen a la misma categoría
+    $etiquetasDeLaCategoria = $etiquetaModel->where('id_categoria', $categoria->id)->findAll();
+
+    // Obtener las etiquetas asignadas al libro
+    $etiquetasAsignadas = $libroEtiquetaModel->where('id_libro', $id)
+        ->findAll();
+
+    // Convertir el resultado en un array de ids para facilitar la comprobación en la vista
+    $etiquetasAsignadasIds = array_column($etiquetasAsignadas, 'id_etiqueta');
+
+    // Pasar los datos a la vista.
+    echo view('Dashboard/Libreria/editar', [
+        'libro' => $libro,
+        'categorias' => $categoriaModel->findAll(),
+        'etiquetasDeLaCategoria' => $etiquetasDeLaCategoria,
+        'etiquetasAsignadasIds' => $etiquetasAsignadasIds
+    ]);
+}
+    
+
+    
 
     public function update($id = null)
 {
@@ -197,8 +227,8 @@ class Libreria extends BaseController
             }
         }
     } else {
-        session()->setFlashdata('validation', $this->validator->listErrors());
-        return redirect()->back()->withInput();
+        return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        
     }
     session()->setFlashdata('mensaje', 'Datos cambiados exitosamente');
     return redirect()->to('/libreria');

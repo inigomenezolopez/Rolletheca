@@ -52,42 +52,50 @@ class Categoria extends BaseController
     }
 
     public function show($id = null)
-    {
-        // Instanciar modelos
-        $categoriaModel = new CategoriaModel();
-        $libreriaModel = new LibreriaModel();
-        $libroEtiquetaModel = new LibreriaEtiquetaModel();
-        // Obtener la categoría
-        $categoria = $categoriaModel->find($id);
-        if (!$categoria) {
-            // Si la categoría no existe, puedes redireccionar o mostrar un error.
-            return redirect()->back()->with('error', 'Categoría no encontrada.');
-        }
-    
-        // Obtener las librerías por categoría con paginación
-        $librerias = $libreriaModel->where('id_categoria', $id)->paginate(12); // Ejemplo, 12 items por página
-    
-        // Calcular la valoración media para cada libro
-        foreach ($librerias as $key => $libreria) {
-            // Aquí obtenemos la valoración media usando el método del modelo y el ID del libro
-            $valoracionMedia = $libreriaModel->valoracionMedia($libreria->id);
-            // Y aquí asignamos esa valoración media al objeto libro en su propiedad 'valoracionMedia'
-            $librerias[$key]->valoracionMedia = $valoracionMedia;
-        
-            // Obtener las etiquetas para cada libro
-            $etiquetas = $libroEtiquetaModel->where('id_libro', $libreria->id)
-                                            ->join('etiquetas', 'etiquetas.id = libro_etiqueta.id_etiqueta')
-                                            ->findAll();
-            $librerias[$key]->etiquetas = $etiquetas; // Asignar etiquetas al libro actual en el bucle
-        }
-    
-        // Pasar datos a la vista
-        return view('Dashboard/categoria/ver', [
-            'categoria' => $categoria,
-            'libros' => $librerias, // Aquí 'libros' contendría la lista de 'librerias' con sus respectivas 'etiquetas'
-            'pager' => $libreriaModel->pager // Pasamos también el pager para generar los enlaces en la vista.
-        ]);
+{
+    // Instanciar modelos
+    $categoriaModel = new CategoriaModel();
+    $libreriaModel = new LibreriaModel();
+    $etiquetaModel = new \App\Models\EtiquetaModel(); // Modelo para las etiquetas
+
+    // Obtener la categoría
+    $categoria = $categoriaModel->find($id);
+    if (!$categoria) {
+        return redirect()->back()->with('error', 'Categoría no encontrada.');
     }
+
+    // Verificar si hay parámetros de filtro de etiquetas
+    $etiquetasSeleccionadas = $this->request->getGet('etiquetas') ?? [];
+
+    // Obtener todas las etiquetas disponibles para el filtro dentro de la categoría seleccionada
+    $todasLasEtiquetas = $etiquetaModel->where('id_categoria', $id)->findAll();
+
+    // Aplicar el filtrado si hay etiquetas seleccionadas
+    if ($etiquetasSeleccionadas) {
+        $librerias = $libreriaModel->filtrarPorEtiquetasCategoria($etiquetasSeleccionadas, $id);
+    } else {
+        // Obtener las librerías por categoría sin filtrar por etiquetas
+        $librerias = $libreriaModel->where('id_categoria', $id)->paginate(12); // Ejemplo, 12 items por página
+    }
+
+    foreach ($librerias as $key => $libreria) {
+        $librerias[$key]->valoracionMedia = $libreriaModel->valoracionMedia($libreria->id);
+        $librerias[$key]->etiquetas = $etiquetaModel
+            ->select('etiquetas.*')
+            ->join('libro_etiqueta', 'libro_etiqueta.id_etiqueta = etiquetas.id')
+            ->where('libro_etiqueta.id_libro', $libreria->id)
+            ->findAll();
+    }
+
+    // Pasar datos a la vista
+    return view('Dashboard/categoria/ver', [
+        'categoria' => $categoria,
+        'libros' => $librerias,
+        'pager' => $libreriaModel->pager,
+        'todasLasEtiquetas' => $todasLasEtiquetas,
+        'etiquetasSeleccionadas' => $etiquetasSeleccionadas
+    ]);
+}
     
     
 

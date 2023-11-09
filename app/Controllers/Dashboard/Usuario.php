@@ -33,8 +33,8 @@ class Usuario extends BaseController
         if (isset($login_attempts[$ipAddress]) && $login_attempts[$ipAddress]['count'] >= 3) {
             $last_attempt_time = $login_attempts[$ipAddress]['time'];
             // Si han pasado menos de 5 minutos desde el último intento
-            if ($current_time - $last_attempt_time < 300) {
-                return redirect()->back()->with('mensaje', 'Demasiados intentos fallidos. Por favor, espera 5 minutos antes de intentar nuevamente.');
+            if ($current_time - $last_attempt_time < 200) {
+                return redirect()->back()->with('errors', 'Demasiados intentos fallidos. Por favor, espera 5 minutos antes de intentar nuevamente.');
             }
         }
     
@@ -106,25 +106,7 @@ function register_post() {
     
    }
 
-   public function enviarMensaje()
-   {
-       $nombre = $this->request->getPost('nombre');
-       $correo = $this->request->getPost('email');
-       $mensaje = $this->request->getPost('mensaje');
    
-       $para = 'admin@hotmail.com'; // Reemplaza esto con la dirección de correo a la que quieras enviar el mensaje
-       $asunto = 'Nuevo mensaje de ' . $nombre;
-   
-       $cabeceras = 'Para: ' . $para . "\r\n" .
-           'Responder a: ' . $correo . "\r\n";
-           
-   
-       if(mail($para, $asunto, $mensaje, $cabeceras)) {
-           return redirect()->back()->with('mensaje', 'Mensaje enviado con éxito');
-       } else {
-           return redirect()->back()->with('error', 'Hubo un problema al enviar el mensaje');
-       }
-   }
 
    public function mostrarPerfil()
    {
@@ -253,5 +235,103 @@ public function recortarImagen()
     }
 }
 
+public function solicitarRestablecimientoContrasena()
+{
+    return view('dashboard/solicitar_restablecimiento');
+}
 
+public function procesarSolicitudRestablecimiento()
+{
+    $email = $this->request->getPost('email');
+    $usuarioModel = new UsuarioModel();
+    $usuario = $usuarioModel->where('correo', $email)->first();
+
+    if (!$usuario) {
+        session()->setFlashdata('error', 'No pudimos encontrar una cuenta con ese correo electrónico.');
+        return redirect()->back();
+    }
+
+    // Generar un token único y guardarlo junto con el timestamp en la base de datos
+    $token = bin2hex(random_bytes(16));
+    $usuarioModel->update($usuario->id, [
+        'reset_token' => $token,
+        'reset_expiration' => date('Y-m-d H:i:s', time() + 7200) // 2 horas para la expiración
+    ]);
+
+    // Enviar el correo electrónico al usuario con el token
+    $this->enviarEmailRecuperarContrasena($usuario->correo, $token);
+
+    session()->setFlashdata('mensaje', 'Tu acción fue exitosa y se completó correctamente.');
+    return redirect()->back();
+}
+public function mostrarFormularioRestablecimiento($token)
+{
+    $usuarioModel = new UsuarioModel();
+    $usuario = $usuarioModel->where('reset_token', $token)->where('reset_expiration >', date('Y-m-d H:i:s'))->first();
+
+    if (!$usuario) {
+        return redirect()->to('/')->with('error', 'El token de restablecimiento de contraseña es inválido o ha expirado.');
+    }
+
+    return view('dashboard/restablecer_contrasena', ['token' => $token]);
+}
+public function procesarRestablecimientoContrasena()
+{
+    $rules = [
+        'nueva_contrasena' => [
+            'label' => 'Nueva contraseña',
+            'rules' => 'required|min_length[8]',
+            'errors' => [
+                'required' => 'El campo {field} es obligatorio.',
+                'min_length' => 'El campo {field} debe tener al menos {param} caracteres de longitud.',
+            ],
+        ],
+        'confirmar_contrasena' => [
+            'label' => 'Confirmar nueva contraseña',
+            'rules' => 'matches[nueva_contrasena]',
+            'errors' => [
+                'matches' => 'Las contraseñas no coinciden.',
+            ],
+        ],
+    ];
+
+    if (!$this->validate($rules)) {
+        // La validación falló, reenviar al formulario con errores y datos antiguos
+        return redirect()->back()->withInput()->with('error', $this->validator->getErrors());
+    }
+
+    $token = $this->request->getPost('token');
+    $nuevaContrasena = $this->request->getPost('nueva_contrasena');
+    
+    $usuarioModel = new UsuarioModel();
+    $usuario = $usuarioModel->where('reset_token', $token)->first();
+
+    if (!$usuario) {
+        return redirect()->back()->with('error', 'El token es inválido o ha expirado.');
+    }
+
+    $usuarioModel->update($usuario->id, [
+        'contrasena' => password_hash($nuevaContrasena, PASSWORD_DEFAULT),
+        'reset_token' => null, // Asegúrate de que tu modelo permita valores nulos para reset_token
+        'reset_expiration' => null // y reset_expiration.
+    ]);
+
+    return redirect()->to(route_to('usuario.login'))->with('mensaje', 'Tu contraseña ha sido actualizada.');
+}
+
+
+private function enviarEmailRecuperarContrasena($email, $token)
+{
+    $emailService = \Config\Services::email();
+    
+    $emailService->setFrom('no-reply@example.com', 'Your Application Name');
+    $emailService->setTo($email);
+    $emailService->setSubject('Restablecimiento de contraseña');
+    $emailService->setMessage(view('dashboard/emails/restablecer_contrasena', ['token' => $token]));
+
+    if (!$emailService->send()) {
+        log_message('error', 'Hubo un error al enviar el email de restablecimiento de contraseña: ' . $emailService->printDebugger(['headers']));
+        // ... Manejar error ...
+    }
+}
 }
