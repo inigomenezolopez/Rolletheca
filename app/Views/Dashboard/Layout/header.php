@@ -81,6 +81,9 @@
                             Categorías
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <?php if (session()->has('usuario') && session('usuario')->rol == 'admin'): ?>
+                            <a class="dropdown-item" href="/categoria">Categoria</a>
+                            <?php endif; ?>
                             <?php if(is_array($categorias) && !empty($categorias)): ?>
                             <?php foreach ($categorias as $categoria): ?>
                             <a class="dropdown-item"

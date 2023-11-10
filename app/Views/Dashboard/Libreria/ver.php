@@ -39,9 +39,10 @@
             <br>
             <hr>
             <div class="text-center">
-                <img src="/images/libreria/<?= esc($libro->ruta_archivo)?>" class="img-fluid libro-imagen"
-                    alt="Imagen del libro" style="max-width: 100%; height: auto;">
+                <img src="/images/libreria/<?= esc($libro->ruta_archivo) ?>" class="img-fluid libro-imagen"
+                    alt="Imagen del libro" style="height: auto; max-height: 700px; width: 100%; object-fit: cover;">
             </div>
+            <hr>
             <p class="mt-4 text-center"><?= esc($libro->descripcion) ?></p>
         </div>
     </div>
@@ -114,7 +115,10 @@
                                             class="btn btn-primary btn-sm mr-2">Editar</a>
                                         <form action="<?= site_url('comentario/borrar/' . $comentario->id) ?>"
                                             method="post" class="d-inline">
-                                            <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                onclick="return confirm('¿Estás seguro de que deseas eliminar este comentario?');">
+                                                Borrar
+                                            </button>
                                         </form>
                                         <?php endif; ?>
                                     </div>

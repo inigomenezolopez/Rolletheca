@@ -9,7 +9,7 @@
 </div>
 
 <!-- Botón para mostrar/ocultar el filtro de etiquetas -->
-<button class="btn btn-info mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#filtroEtiquetas"
+<button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#filtroEtiquetas"
     aria-expanded="false" aria-controls="filtroEtiquetas">
     Filtrar por etiquetas
 </button>
@@ -26,7 +26,7 @@
             </div>
             <?php endforeach; ?>
         </div>
-        <button type="submit" class="btn btn-primary">Aplicar Filtro</button>
+        <button type="submit" class="btn btn-secondary btn-sm">Aplicar Filtro</button>
     </form>
 </div>
 
@@ -36,7 +36,8 @@
     <?php foreach ($libros as $libro): ?>
     <div class="col-lg-4 col-md-6 mb-4">
         <div class="card h-100 border border-1 shadow-sm">
-            <img src="/images/libreria/<?= esc($libro->ruta_archivo) ?>" class="card-img-top" alt="Imagen del libro">
+            <img src="/images/libreria/<?= esc($libro->ruta_archivo) ?>" class="card-img-top" alt="Imagen del libro"
+                style="height: 200px; width: 100%; object-fit: cover;">
             <div class="card-body d-flex flex-column">
                 <h5 class="card-title"><?= esc($libro->titulo) ?></h5>
                 <p class="card-text"><?= esc($libro->descripcion) ?></p>
@@ -58,7 +59,10 @@
                     <a href="/libreria/editar/<?= esc($libro->id) ?>" class="btn btn-secondary btn-sm">Editar</a>
                     <form action="/libreria/eliminar/<?= esc($libro->id) ?>" method="post"
                         style="display: inline-block;">
-                        <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
+                        <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('¿Estás seguro de que deseas eliminar este libro?');">
+                            Borrar
+                        </button>
                     </form>
                     <?php endif; ?>
                 </div>

@@ -40,7 +40,10 @@
                     <a href="/libreria/editar/<?= esc($libro->id) ?>" class="btn btn-secondary btn-sm">Editar</a>
                     <form action="/libreria/eliminar/<?= esc($libro->id) ?>" method="post"
                         style="display: inline-block;">
-                        <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
+                        <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('¿Estás seguro de que quieres eliminar este libro?');">
+                            Borrar
+                        </button>
                     </form>
                     <?php endif; ?>
                 </div>

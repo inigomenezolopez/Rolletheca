@@ -45,14 +45,17 @@
                             <textarea name="descripcion" id="descripcion" class="form-control"
                                 rows="4"><?= old('descripcion', esc($libro->descripcion)) ?></textarea>
                         </div>
+                        <br>
                         <div class="mb-3">
 
                             <!-- Muestra la imagen actual -->
                             <?php if (isset($libro->ruta_archivo) && file_exists(FCPATH . 'images/libreria/' . $libro->ruta_archivo)): ?>
                             <img src="<?= base_url('images/libreria/' . esc($libro->ruta_archivo)) ?>"
-                                alt="Imagen actual" class="img-thumbnail">
+                                alt="Imagen actual del libro" class="img-thumbnail"
+                                style="display: block; margin: 0 auto; height: 400px; width: auto; object-fit: cover; border-radius: 0.25rem;">
                             <?php endif; ?>
                             <br>
+
                             <!-- Input para cargar una nueva imagen -->
                             <input type="file" class="form-control" id="imagen" name="imagen">
                             <!-- Campo oculto para mantener la referencia de la imagen actual en caso de que no se cargue una nueva -->

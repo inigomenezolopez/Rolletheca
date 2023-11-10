@@ -74,24 +74,6 @@ form {
     box-shadow: 0 0 5px rgba(0, 80, 80, .4);
     border-radius: 4px;
 }
-
-.btn {
-    transition: all .5s ease;
-    width: 70%;
-    border-radius: 30px;
-    color: #008080;
-    font-weight: 600;
-    background-color: #fff;
-    border: 1px solid #b0c7d1;
-    margin-top: 1.5em;
-    margin-bottom: 1em;
-}
-
-.btn:hover,
-.btn:focus {
-    background-color: #cbdbe5;
-    color: #fff;
-}
 </style>
 
 
@@ -122,12 +104,13 @@ form {
                             <input type="password" name="contrasena" id="contrasena" class="form__input"
                                 placeholder="Contraseña">
                         </div>
-
+                        <br>
                         <div class="row">
-                            <input type="submit" value="Registrarse" class="btn">
+                            <input type="submit" value="Registrarse" class="btn btn-primary">
                         </div>
                     </form>
                 </div>
+                <br>
                 <div class="row">
                     <p>¿Ya tienes cuenta? <a href="<?= route_to('usuario.login')?>">Inicia sesión</a></p>
                 </div>

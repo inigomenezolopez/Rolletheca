@@ -53,8 +53,10 @@
                         role="button">Editar</a>
                     <form action="/categoria/eliminar/<?= esc($categoria->id) ?>" method="post"
                         style="display: inline-block;">
-                        <button class="btn btn-danger btn-sm" type="submit">Borrar</button>
+                        <button class="btn btn-danger btn-sm" type="submit"
+                            onclick="return confirm('¿Estás seguro de que quieres eliminar esta categoría?');">Borrar</button>
                     </form>
+
                     <?php endif; ?>
                 </td>
             </tr>
