@@ -1,4 +1,3 @@
-
 <?= $this->extend('/Dashboard/Layout/header') ?>
 
 
@@ -7,7 +6,7 @@
     <h2>Solicitud de restablecimiento de contraseña</h2>
     <p>Introduce tu correo electrónico para recibir las instrucciones para restablecer tu contraseña.</p>
 
-    
+
 
     <form action="<?= base_url('recuperar-contrasena') ?>" method="post">
         <div class="form-group">

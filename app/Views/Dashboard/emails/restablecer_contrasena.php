@@ -1,4 +1,5 @@
-<p>Has solicitado restablecer tu contraseña en nuestro sitio web. Si no realizaste esta solicitud, simplemente ignora este correo electrónico y no se realizará ningún cambio.</p>
+<p>Has solicitado restablecer tu contraseña en nuestro sitio web. Si no realizaste esta solicitud, simplemente ignora
+    este correo electrónico y no se realizará ningún cambio.</p>
 
 <p>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p>
 

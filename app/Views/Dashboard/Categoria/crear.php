@@ -13,11 +13,13 @@
                     <form action="/categoria/guardar" method="post" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="nombre">Nombre de la Categoría:</label>
-                            <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Nombre de Categoria" value="<?= old('nombre')?>">
+                            <input type="text" name="nombre" id="nombre" class="form-control"
+                                placeholder="Nombre de Categoria" value="<?= old('nombre')?>">
                         </div>
                         <div class="form-group">
                             <label for="descripcion">Descripción:</label>
-                            <textarea name="descripcion" id="descripcion" class="form-control" rows="4"><?= old('descripcion')?></textarea>
+                            <textarea name="descripcion" id="descripcion" class="form-control"
+                                rows="4"><?= old('descripcion')?></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="imagen" class="form-label">Imagen</label>

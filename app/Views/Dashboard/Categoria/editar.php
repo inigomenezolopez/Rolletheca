@@ -10,14 +10,18 @@
                     <h3 class="mb-0">Editar Categoría</h3>
                 </div>
                 <div class="card-body" style="color: #1b2530;">
-                    <form action="/categoria/actualizar/<?= esc($categorias->id)?>" method="post" enctype="multipart/form-data">
+                    <form action="/categoria/actualizar/<?= esc($categorias->id)?>" method="post"
+                        enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="nombre">Nombre de la Categoría:</label>
-                            <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Nombre de Categoria" value="<?= old('nombre', esc($categorias->nombre)) ?>">
+                            <input type="text" name="nombre" id="nombre" class="form-control"
+                                placeholder="Nombre de Categoria"
+                                value="<?= old('nombre', esc($categorias->nombre)) ?>">
                         </div>
                         <div class="form-group">
                             <label for="descripcion">Descripción:</label>
-                            <textarea name="descripcion" id="descripcion" class="form-control" rows="4"><?= old('descripcion', esc($categorias->descripcion)) ?></textarea>
+                            <textarea name="descripcion" id="descripcion" class="form-control"
+                                rows="4"><?= old('descripcion', esc($categorias->descripcion)) ?></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="imagen" class="form-label">Imagen</label>

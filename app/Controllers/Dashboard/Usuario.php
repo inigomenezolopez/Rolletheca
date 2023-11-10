@@ -1,50 +1,56 @@
 <?php
 
+// Espacio de nombres del controlador, ubicado en la carpeta Controllers/Dashboard.
 namespace App\Controllers\Dashboard;
+
+// Importación de clases necesarias.
 use CodeIgniter\Files\File;
 use Config\Services;
 use App\Controllers\BaseController;
 use App\Models\UsuarioModel;
 use CodeIgniter\I18n\Time;
 
+// Clase Usuario que extiende de BaseController.
 class Usuario extends BaseController
 {
-    
-
+    // Método para mostrar la vista de inicio de sesión.
     function login() {
-
         echo view ('dashboard/login');
-        
     }
+    
+    // Método POST para el inicio de sesión que procesa los datos enviados desde el formulario.
     public function login_post() {
-        $usuarioModel = new UsuarioModel();
+        $usuarioModel = new UsuarioModel(); // Instancia del modelo UsuarioModel.
         
+        // Recuperar el correo y la contraseña del formulario de inicio de sesión.
         $correo = $this->request->getPost('correo');
         $contrasena = $this->request->getPost('contrasena');
-        $ipAddress = $this->request->getIPAddress(); // Obtener la dirección IP del usuario
+        $ipAddress = $this->request->getIPAddress(); // Obtener la dirección IP del cliente.
     
-        $session = session();
+        $session = session(); // Iniciar o continuar la sesión actual.
     
-        // Comprobar intentos de inicio de sesión previos
+        // Recuperar y manejar intentos previos de inicio de sesión fallidos.
         $login_attempts = $session->get('login_attempts') ?? [];
         $current_time = time();
     
-        // Si ya hay registros de intentos fallidos para esta IP
+        // Comprobar si se ha excedido el número de intentos de inicio de sesión y aplicar un bloqueo temporal si es necesario.
         if (isset($login_attempts[$ipAddress]) && $login_attempts[$ipAddress]['count'] >= 3) {
             $last_attempt_time = $login_attempts[$ipAddress]['time'];
-            // Si han pasado menos de 5 minutos desde el último intento
             if ($current_time - $last_attempt_time < 200) {
+                // Si el último intento fue hace menos de 5 minutos, redirige con un mensaje de error.
                 return redirect()->back()->with('errors', 'Demasiados intentos fallidos. Por favor, espera 5 minutos antes de intentar nuevamente.');
             }
         }
     
-        $usuario = $usuarioModel->select('id, usuario, correo, contrasena, rol, imagen') // Asegúrate de seleccionar la columna de la imagen
+        // Intentar obtener el usuario de la base de datos usando el correo o nombre de usuario proporcionado.
+        $usuario = $usuarioModel->select('id, usuario, correo, contrasena, rol, imagen')
             ->orwhere('correo', $correo)
             ->orwhere('usuario', $correo)
             ->first();
     
+        // Verificar si el usuario existe y si la contraseña es correcta.
         if (!$usuario || !$usuarioModel->contrasenaVerificar($contrasena, $usuario->contrasena)) {
-            // Registro o actualización del conteo de intentos fallidos
+            // Si la autenticación falla, incrementar el contador de intentos fallidos y devolver un mensaje de error.
             if (!isset($login_attempts[$ipAddress])) {
                 $login_attempts[$ipAddress] = ['count' => 1, 'time' => $current_time];
             } else {
@@ -56,130 +62,129 @@ class Usuario extends BaseController
             return redirect()->back()->with('mensaje', 'Usuario y/o contraseña incorrectos');
         }
     
-        // Si el inicio de sesión es exitoso, restablece los intentos de inicio de sesión
+        // Si el inicio de sesión es exitoso, resetear el contador de intentos fallidos.
         unset($login_attempts[$ipAddress]);
         $session->set('login_attempts', $login_attempts);
     
-        // El inicio de sesión fue exitoso, continuar con el proceso de inicio de sesión
+        // Eliminar la contraseña del objeto usuario por seguridad antes de guardar en la sesión.
         unset($usuario->contrasena);
         
-        // Guardamos la información del usuario en la sesión
+        // Guardar los datos del usuario en la sesión y redirigir a la página de inicio.
         session()->set('usuario', $usuario);
-        
         return redirect()->to('/inicio');
     }
+
     
 
 function register() {
-
+    
+    //Imprime la vista registrarse
     echo view ('dashboard/register');
     
 }
+// Método para registrar un nuevo usuario.
 function register_post() {
-
+    // Instanciamos el modelo de usuario.
     $usuarioModel = new UsuarioModel();
 
-
+    // Validamos que los datos enviados desde el formulario cumplan con las reglas definidas en la configuración de validación.
     if ($this->validate('usuarios')) {
+        // Si la validación es exitosa, insertamos el nuevo usuario en la base de datos.
         $usuarioModel->insert([
-        'usuario' => $this->request->getPost('usuario'),
-        'correo' => $this->request->getPost('correo'),
-        'contrasena' => $usuarioModel->contrasenaHash($this->request->getPost('contrasena')),
-        'fecha_creacion'=> Time::now()
+            'usuario' => $this->request->getPost('usuario'), // Nombre de usuario.
+            'correo' => $this->request->getPost('correo'), // Correo electrónico.
+            // Hash de la contraseña para almacenar de manera segura.
+            'contrasena' => $usuarioModel->contrasenaHash($this->request->getPost('contrasena')),
+            'fecha_creacion'=> Time::now() // Fecha y hora de creación del usuario.
         ]);
 
+        // Redireccionamos al usuario a la página de inicio de sesión con un mensaje de éxito.
         return redirect()->to(route_to('usuario.login'))->with('mensaje','Registro completado correctamente');
     }
     
+    // Si la validación falla, guardamos los errores en la sesión y redireccionamos al formulario con los datos ingresados.
     session()->setFlashdata([
         'validation'=>$this->validator
     ]);
     return redirect()->back()->withInput();
-
-
 }
-   function logout() {
 
+// Método para cerrar sesión del usuario.
+function logout() {
+    // Destruimos la sesión del usuario.
     session()->destroy();
 
+    // Redireccionamos al usuario a la página de inicio de sesión.
     return redirect()->to(route_to('usuario.login'));
-    
-   }
+}
 
-   
-
-   public function mostrarPerfil()
-   {
-       // Obtén el objeto de usuario almacenado en la sesión
-       $usuario = session()->get('usuario');
-       
-       if (!$usuario) {
-           return redirect()->to('/usuario/login');
-       }
-   
-       $usuarioModel = new UsuarioModel();
-       
-       // Obtén el usuario de la base de datos basado en el ID
-       $usuarioDb = $usuarioModel->find($usuario->id);
-   
-       // Verifica que el usuario se haya obtenido correctamente
-       if (!$usuarioDb) {
-           return redirect()->to('/usuario/login'); 
-       }
-   
-       // Muestra la vista y pasa el usuario como un objeto
-       return view('/dashboard/Miperfil', ['usuario' => $usuarioDb]);
-   }
-
-  
-
-
-   public function actualizarPerfil()
+// Método para mostrar el perfil del usuario.
+public function mostrarPerfil()
 {
+    // Obtenemos el usuario de la sesión actual.
+    $usuario = session()->get('usuario');
+    
+    // Si no hay un usuario en sesión, redireccionamos a la página de inicio de sesión.
+    if (!$usuario) {
+        return redirect()->to('/usuario/login');
+    }
+
     $usuarioModel = new UsuarioModel();
+    
+    // Buscamos los datos completos del usuario en la base de datos usando su ID.
+    $usuarioDb = $usuarioModel->find($usuario->id);
+
+    // Si no encontramos al usuario, redireccionamos a la página de inicio de sesión.
+    if (!$usuarioDb) {
+        return redirect()->to('/usuario/login'); 
+    }
+
+    // Pasamos los datos del usuario a la vista de perfil y la mostramos.
+    return view('/dashboard/Miperfil', ['usuario' => $usuarioDb]);
+}
+
+// Método para actualizar los datos del perfil del usuario.
+public function actualizarPerfil()
+{
+    // Instanciamos el modelo de usuario.
+    $usuarioModel = new UsuarioModel();
+    // Obtenemos el usuario de la sesión actual.
     $usuarioSesion = session()->get('usuario');
 
+    // Verificamos que el método de la solicitud sea POST.
     if ($this->request->getMethod() === 'post') {
+        // Instanciamos el servicio de validación.
         $validation = \Config\Services::validation();
+        // Definimos las reglas de validación para 'usuario' y 'correo' asegurando que sean únicos en la base de datos excepto para el usuario actual.
         $validation->setRule('usuario', 'Usuario', "required|min_length[5]|max_length[20]|is_unique[usuarios.usuario,id,{$usuarioSesion->id}]");
         $validation->setRule('correo', 'Correo', "valid_email|required|is_unique[usuarios.correo,id,{$usuarioSesion->id}]");
 
+        // Si la validación es exitosa, procesamos la actualización del perfil.
         if ($this->validate($validation->getRules())) {
+            // Procesamos la imagen de perfil si fue enviada con el formulario.
             $imagen = $this->request->getFile('imagen');
             $datosActualizar = [
-                'usuario' => $this->request->getPost('usuario'),
-                'correo' => $this->request->getPost('correo'),
+                'usuario' => $this->request->getPost('usuario'), // Nombre de usuario actualizado.
+                'correo' => $this->request->getPost('correo'), // Correo electrónico actualizado.
             ];
 
+            // Si hay una imagen y es válida, la procesamos.
             if ($imagen->isValid() && !$imagen->hasMoved()) {
+                // Si hay una imagen previa, la eliminamos.
                 $imagenActual = $usuarioSesion->imagen;
-            if ($imagenActual && file_exists(FCPATH . 'images/usuario/' . $imagenActual)) {
-                unlink(FCPATH . 'images/usuario/' . $imagenActual);
-            }
-                $nuevoNombre = $imagen->getRandomName();
-                $rutaTemporal = $imagen->getTempName();
-
-                // Obtén las coordenadas de recorte desde el formulario
-                $x = $this->request->getPost('x');
-                $y = $this->request->getPost('y');
-                $width = $this->request->getPost('width');
-                $height = $this->request->getPost('height');
-
-                $imageService = \Config\Services::image()
-                    ->withFile($rutaTemporal)
-                    ->crop($width, $height, $x, $y)  // Aquí se aplica el recorte
-                    ->save(FCPATH . 'images/usuario/' . $nuevoNombre);
-
-                if ($imageService) {
-                    $datosActualizar['imagen'] = $nuevoNombre;
-                } else {
-                    return redirect()->back()->with('mensaje', 'Hubo un problema al procesar la imagen.')->withInput();
+                if ($imagenActual && file_exists(FCPATH . 'images/usuario/' . $imagenActual)) {
+                    unlink(FCPATH . 'images/usuario/' . $imagenActual);
                 }
+                // Generamos un nombre aleatorio para la nueva imagen y guardamos la imagen recortada.
+                $nuevoNombre = $imagen->getRandomName();
+                $datosActualizar['imagen'] = $nuevoNombre;
+                $imagen->move(FCPATH . 'images/usuario', $nuevoNombre);
             }
 
+            // Actualizamos los datos del usuario en la base de datos.
             $usuarioModel->update($usuarioSesion->id, $datosActualizar);
 
-            // Actualiza la información del usuario en la sesión
+            // Actualizamos la sesión con los nuevos datos.
             $usuarioSesion->usuario = $datosActualizar['usuario'];
             $usuarioSesion->correo = $datosActualizar['correo'];
             if (isset($datosActualizar['imagen'])) {
@@ -187,96 +192,130 @@ function register_post() {
             }
             session()->set('usuario', $usuarioSesion);
 
-            return redirect()->to('/usuario/mi-perfil')->with('mensaje', 'Cambios realizados con éxito');
-        } else {
-            return redirect()->back()->withInput()->with('validation', $this->validator);
+            // Redireccionamos al usuario a la vista de perfil con un mensaje de éxito.
+            return redirect()->to(route_to('usuario.mostrarPerfil'))->with('mensaje','Perfil actualizado correctamente');
         }
+        
+        // Si la validación falla, guardamos los errores en la sesión y redireccionamos al formulario con los datos ingresados.
+        session()->setFlashdata([
+            'validation'=>$this->validator
+        ]);
+        return redirect()->back()->withInput();
     }
 
-    $usuarioDb = $usuarioModel->find($usuarioSesion->id);
-    return view('/dashboard/Miperfil', ['usuario' => $usuarioDb]);
+    // Si el método no es POST, redireccionamos al perfil del usuario.
+    return redirect()->to(route_to('usuario.mostrarPerfil'));
 }
 
 
+
+// Función para recortar una imagen subida por el usuario. Requiere coordenadas y dimensiones para el recorte.
 public function recortarImagen()
 {
+    // Recoge el archivo de imagen y las coordenadas y dimensiones para el recorte de la petición HTTP.
     $imagen = $this->request->getFile('imagen');
     
+    // Convierte los valores recibidos a enteros.
     $x = (int)$this->request->getPost('x');
     $y = (int)$this->request->getPost('y');
     $width = (int)$this->request->getPost('width');
     $height = (int)$this->request->getPost('height');
 
-    // Validar que las coordenadas y dimensiones son números válidos y mayores que 0
+    // Comprueba si los valores de las coordenadas y dimensiones son válidos.
     if (!is_numeric($x) || !is_numeric($y) || !is_numeric($width) || !is_numeric($height) ||
         $width <= 0 || $height <= 0) {
-        return $this->response->setJSON(['error' => 'Valores inválidos para el recorte de la imagen.']);
+        // Devuelve un error si los valores no son válidos.
+        return $this->response->setJSON(['mensaje' => 'Valores inválidos para el recorte de la imagen.']);
     }
 
+    // Si la imagen es válida y no ha sido movida aún, procede con el proceso.
     if ($imagen->isValid() && !$imagen->hasMoved()) {
+        // Genera un nombre aleatorio para la imagen y la mueve al directorio especificado.
         $nombreImagen = $imagen->getRandomName();
         $imagen->move(FCPATH . 'images/usuario/', $nombreImagen);
+        // Construye la ruta completa de la imagen.
         $rutaImagen = FCPATH . 'images/usuario/' . $nombreImagen;
 
         try {
+            // Utiliza la librería de imágenes para recortar la imagen según las dimensiones y coordenadas, y guarda los cambios.
             \Config\Services::image()
                 ->withFile($rutaImagen)
                 ->crop($width, $height, $x, $y)
                 ->save($rutaImagen);
 
-            return $this->response->setJSON(['success' => 'Imagen recortada y guardada exitosamente!', 'imageName' => $nombreImagen]);
+            // Devuelve un mensaje de éxito y el nombre de la imagen si el recorte fue exitoso.
+            return $this->response->setJSON(['mensaje' => 'Imagen recortada y guardada exitosamente!', 'imageName' => $nombreImagen]);
         } catch (\Exception $e) {
-            // Borrar la imagen si hubo un error durante el recorte
+            // Si ocurre un error durante el recorte, elimina la imagen y devuelve un mensaje de error.
             unlink($rutaImagen);
-            return $this->response->setJSON(['error' => 'Error al procesar la imagen: ' . $e->getMessage()]);
+            return $this->response->setJSON(['mensaje' => 'Error al procesar la imagen: ' . $e->getMessage()]);
         }
     } else {
-        return $this->response->setJSON(['error' => 'Error al subir la imagen: ' . $imagen->getErrorString()]);
+        // Devuelve un mensaje de error si hubo un problema al subir la imagen.
+        return $this->response->setJSON(['mensaje' => 'Error al subir la imagen: ' . $imagen->getErrorString()]);
     }
 }
 
+// Función para mostrar la vista de solicitud de restablecimiento de contraseña.
 public function solicitarRestablecimientoContrasena()
 {
+    // Devuelve la vista correspondiente al formulario de solicitud de restablecimiento de contraseña.
     return view('dashboard/solicitar_restablecimiento');
 }
 
+// Función para procesar la solicitud de restablecimiento de contraseña.
 public function procesarSolicitudRestablecimiento()
 {
+    // Obtiene el correo electrónico del formulario.
     $email = $this->request->getPost('email');
+    // Crea una instancia del modelo de usuario y busca al usuario por correo electrónico.
     $usuarioModel = new UsuarioModel();
     $usuario = $usuarioModel->where('correo', $email)->first();
 
+    // Si no se encuentra el usuario, devuelve un error.
     if (!$usuario) {
-        session()->setFlashdata('error', 'No pudimos encontrar una cuenta con ese correo electrónico.');
+        session()->setFlashdata('mensaje', 'No pudimos encontrar una cuenta con ese correo electrónico.');
         return redirect()->back();
     }
 
-    // Generar un token único y guardarlo junto con el timestamp en la base de datos
+    // Genera un token de restablecimiento único y guarda en la base de datos junto con la fecha de expiración.
     $token = bin2hex(random_bytes(16));
     $usuarioModel->update($usuario->id, [
         'reset_token' => $token,
-        'reset_expiration' => date('Y-m-d H:i:s', time() + 7200) // 2 horas para la expiración
+        'reset_expiration' => date('Y-m-d H:i:s', time() + 7200) // Establece la expiración para 2 horas en el futuro.
     ]);
 
-    // Enviar el correo electrónico al usuario con el token
+    // Envía el correo electrónico con el token de restablecimiento.
     $this->enviarEmailRecuperarContrasena($usuario->correo, $token);
 
+    // Muestra un mensaje de éxito y redirige al usuario.
     session()->setFlashdata('mensaje', 'Tu acción fue exitosa y se completó correctamente.');
     return redirect()->back();
 }
+
+// Función para mostrar el formulario de restablecimiento de contraseña.
 public function mostrarFormularioRestablecimiento($token)
 {
+    // Crea una instancia del modelo de usuario y busca al usuario por el token de restablecimiento.
     $usuarioModel = new UsuarioModel();
     $usuario = $usuarioModel->where('reset_token', $token)->where('reset_expiration >', date('Y-m-d H:i:s'))->first();
 
+    // Verifica si el token es válido y no ha expirado.
     if (!$usuario) {
-        return redirect()->to('/')->with('error', 'El token de restablecimiento de contraseña es inválido o ha expirado.');
+        return redirect()->to(route_to('usuario.login'))->with('mensaje', 'El token de restablecimiento de contraseña es inválido o ha expirado.');
     }
 
+    // Muestra la vista para restablecer la contraseña si el token es válido.
     return view('dashboard/restablecer_contrasena', ['token' => $token]);
 }
+        
+
+
+
+// Función para procesar el restablecimiento de contraseña.
 public function procesarRestablecimientoContrasena()
 {
+    // Reglas de validación para la nueva contraseña y su confirmación
     $rules = [
         'nueva_contrasena' => [
             'label' => 'Nueva contraseña',
@@ -295,40 +334,53 @@ public function procesarRestablecimientoContrasena()
         ],
     ];
 
+    // Verifica si las reglas de validación se cumplen
     if (!$this->validate($rules)) {
         // La validación falló, reenviar al formulario con errores y datos antiguos
-        return redirect()->back()->withInput()->with('error', $this->validator->getErrors());
+        session()->setFlashdata($this->validator->getErrors());
+        return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
     }
 
+    // Recupera el token del formulario
     $token = $this->request->getPost('token');
+    // Recupera la nueva contraseña del formulario
     $nuevaContrasena = $this->request->getPost('nueva_contrasena');
     
+    // Instancia del modelo de usuario y búsqueda de usuario por token
     $usuarioModel = new UsuarioModel();
     $usuario = $usuarioModel->where('reset_token', $token)->first();
 
+    // Verifica si el usuario con el token dado existe
     if (!$usuario) {
-        return redirect()->back()->with('error', 'El token es inválido o ha expirado.');
+        session()->setFlashdata('mensaje', 'El token es inválido o ha expirado.');
+        return redirect()->back()->withInput();
     }
 
+    // Actualiza la contraseña del usuario en la base de datos
     $usuarioModel->update($usuario->id, [
         'contrasena' => password_hash($nuevaContrasena, PASSWORD_DEFAULT),
-        'reset_token' => null, // Asegúrate de que tu modelo permita valores nulos para reset_token
-        'reset_expiration' => null // y reset_expiration.
+        'reset_token' => null, // Elimina el token de restablecimiento
+        'reset_expiration' => null // Elimina la fecha de expiración del token
     ]);
 
+    // Redirige al usuario a la página de inicio de sesión con un mensaje de éxito
     return redirect()->to(route_to('usuario.login'))->with('mensaje', 'Tu contraseña ha sido actualizada.');
 }
 
-
 private function enviarEmailRecuperarContrasena($email, $token)
 {
+    // Configuración del servicio de email
     $emailService = \Config\Services::email();
     
+    // Configura el remitente y el destinatario del email
     $emailService->setFrom('no-reply@example.com', 'Your Application Name');
     $emailService->setTo($email);
+    // Asunto del email
     $emailService->setSubject('Restablecimiento de contraseña');
+    // Mensaje del email utilizando una vista
     $emailService->setMessage(view('dashboard/emails/restablecer_contrasena', ['token' => $token]));
 
+    // Intento de envío del email y manejo de errores en caso de fallo
     if (!$emailService->send()) {
         log_message('error', 'Hubo un error al enviar el email de restablecimiento de contraseña: ' . $emailService->printDebugger(['headers']));
         // ... Manejar error ...

@@ -26,7 +26,10 @@
                     <h3 class="mb-0">🔒 Políticas de Privacidad</h3>
                 </div>
                 <div class="card-body" style="color: #1b2530;">
-                    <p>Valoramos y respetamos tu privacidad. Te invitamos a leer nuestra <a href="<?= route_to('acercade.politica')?>" class="text-primary font-weight-bold" style="color: #1b2530;">política de privacidad completa</a> y conocer cómo protegemos tus datos. 🛡️</p>
+                    <p>Valoramos y respetamos tu privacidad. Te invitamos a leer nuestra <a
+                            href="<?= route_to('acercade.politica')?>" class="text-primary font-weight-bold"
+                            style="color: #1b2530;">política de privacidad completa</a> y conocer cómo protegemos tus
+                        datos. 🛡️</p>
                 </div>
             </div>
 
@@ -36,7 +39,9 @@
                     <h3 class="mb-0">📜 Términos y Condiciones</h3>
                 </div>
                 <div class="card-body" style="color: #1b2530;">
-                    <p>Al utilizar WebDoc, aceptas nuestros <a href="<?= route_to('acercade.terminos')?>" class="text-primary font-weight-bold" style="color: #1b2530;">términos y condiciones</a>. Conoce tus derechos y responsabilidades como usuario. 🤝</p>
+                    <p>Al utilizar WebDoc, aceptas nuestros <a href="<?= route_to('acercade.terminos')?>"
+                            class="text-primary font-weight-bold" style="color: #1b2530;">términos y condiciones</a>.
+                        Conoce tus derechos y responsabilidades como usuario. 🤝</p>
                 </div>
             </div>
 
