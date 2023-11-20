@@ -15,7 +15,7 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- Volcando datos para la tabla webdoc.categorias: ~7 rows (aproximadamente)
-INSERT INTO `categorias` (`id`, `nombre`, `imagen`, `descripcion`, `slug`) VALUES
+REPLACE INTO `categorias` (`id`, `nombre`, `imagen`, `descripcion`, `slug`) VALUES
 	(1, 'Juegos', '1698926447_57353a8ad23dc9608429.jpg', 'Explora el mundo de los videojuegos, desde los clásicos hasta las últimas novedades. ', 'juegos'),
 	(2, 'Deportes', '1698926456_46741f1569a674435c14.jpg', 'Noticias, análisis y discusiones sobre los deportes más populares del mundo. ', 'deportes'),
 	(3, 'Cine', '1698926463_6543b6bd376321e7424d.jpg', 'Descubre las últimas películas, reseñas y debates sobre el mundo del cine. ', 'cine'),
@@ -24,8 +24,10 @@ INSERT INTO `categorias` (`id`, `nombre`, `imagen`, `descripcion`, `slug`) VALUE
 	(6, 'Ética y Filosofía', '1698926485_fa2aa79c024d8c561c41.jpg', 'Debates profundos y discusiones sobre ética, moral y filosofía. ', 'ética-y-filosofía'),
 	(7, 'Programación', '1698926492_cb37b68090c96c1e9d7e.jpg', 'Aprende, discute y comparte sobre el vasto mundo de la programación y el desarrollo. ', 'programación');
 
+-- Volcando datos para la tabla webdoc.category_info: ~0 rows (aproximadamente)
+
 -- Volcando datos para la tabla webdoc.comentarios: ~185 rows (aproximadamente)
-INSERT INTO `comentarios` (`id`, `id_libro`, `id_usuario`, `contenido`, `fecha_publicacion`, `valoracion`) VALUES
+REPLACE INTO `comentarios` (`id`, `id_libro`, `id_usuario`, `contenido`, `fecha_publicacion`, `valoracion`) VALUES
 	(30, 12, 1, '367576119', '2023-11-09 21:47:20', 5),
 	(31, 25, 1, '1836484629', '2023-11-09 21:47:20', 5),
 	(32, 63, 2, '300932338', '2023-11-09 21:47:20', 1),
@@ -212,8 +214,21 @@ INSERT INTO `comentarios` (`id`, `id_libro`, `id_usuario`, `contenido`, `fecha_p
 	(245, 2, 5, 'fgh', '2023-11-18 10:33:22', 5),
 	(246, 2, 3, 'No lo borres!', '2023-11-18 22:26:58', 5);
 
+-- Volcando datos para la tabla webdoc.comic_info: ~10 rows (aproximadamente)
+REPLACE INTO `comic_info` (`id`, `title`, `picture`, `year`, `price`, `category`, `description`, `created_at`, `updated_at`) VALUES
+	(21, 'BORUTO Nº 19', '1698920866_bd37a6ea4ba31d0e88bd.jpg', 2023, 8.07, 'Mangas', 'Ada ha cortado relaciones con Code y se ha aliado con la Villa de la Hoja. Al equipo siete le asignan una nueva misión, pero ¿¡de que se trata!? Por otro lado, Code pone en marcha el plan para el que usará al diez colas. ¿¡Llegará Ada a la Villa, sobre la que flota una atmósfera de inquietud!?dsdfsdf', '2023-11-02 10:27:46', '2023-11-14 12:43:24'),
+	(27, 'CALLE PELIGRO 7 DE 12', '1699009347_db45b9dd00fdbf29b0cf.jpg', 2023, 3.32, 'Novela gráfica', '¡Lady Cop está a punto de resolver el misterio! La investigadora se adentra en la guarida de los villanos. ¿Quien acudirá en su ayuda? Desde luego, Creeper no va a ser. Mientras tanto, Warlord forja alianzas y se prepara para la batalla de su vida. ¡El universo está en peligro!', '2023-11-03 11:02:27', '2023-11-03 11:02:27'),
+	(28, 'BIBLIOTECA MARVEL 30 DAREDEVIL 2 (1965-66)', '1699009464_07b8359dca46c4b5772c.jpg', 2023, 11.4, 'Superhéroes', 'Es más que un cómic: es una máquina del tiempo. Wally Wood proporciona al Hombre Sin Miedo su uniforme rojo característico, pero también le enfrenta a uno de los más memorables combates de su trayectoria: contra Namor, el Hombre Submarino. Además, el debut de El Zancudo y La Organización y el viaje de DD a La Tierra Salvaje, donde aguarda... ¡Ka-Zar! Contiene los correos de lectores de la edición original y la cronología que lo sitúa todo en contexto. ¡Biblioteca Marvel, como siempre y mejor que nunca! ¡No puedes perderte esta edición histórica!', '2023-11-03 11:04:25', '2023-11-03 11:04:25'),
+	(29, 'FURIA 60 ANIVERSARIO', '1699011057_79121092f5978c6259ea.jpg', 2023, 5.22, 'Superhéroes', 'En celebración de las seis décadas de existencia del agente secreto más importante de Marvel Comics, Al Ewing se une a cuatro dibujantes excepcionales para una saga que bucea en los archivos nunca vistos de Nick Furia: desde sus misiones con Los Comandos Aulladores hasta la actualidad, pasando por los viejos tiempos en que se fundó SHIELD. Pero hace falta más de un Nick Furia para desentrañar un misterio de varias décadas, el que llevará a responder a la pregunta de... ¿quién es Escorpio?', '2023-11-03 11:30:57', '2023-11-03 11:30:57'),
+	(30, 'BORUTO Nº 20', '1699259766_2bff7690074f60288c8d.jpg', 2023, 8.07, 'Mangas', 'Ada ha empezado a vivir en la Villa de la Hoja, y ha hecho llamar a Sarada y Sumire para tener una conversación de chicas con ellas. ¿¡De que tratará!? Por otro lado, Kawaki siente la presencia de Momoshiki oculta en Boruto y toma una difícil decisión... ¡¡Y entonces se produce un cataclismo sobre la Villa y Boruto!!!', '2023-11-06 08:36:06', '2023-11-06 08:36:06'),
+	(31, 'Los Cuatro Fantásticos 8. ¡Caos en el Gran Refugio!', '1699264036_c8ee611eb6d9bd7f33f1.jpg', 1965, 42.7, 'Superhéroes', '¡La Primera Familia a mediados de los setenta! El Doctor Muerte captura a Estela Plateada y planea utilizarlo contra nuestros héroes. No es más que el comienzo de un puñado de historias que incluyen el arranque de la mítica etapa de George Pérez.', '2023-11-06 09:47:16', '2023-11-06 09:47:16'),
+	(32, 'ULTIMATE INVASION 1', '1699264107_8925ef6a7af1e41170ed.jpg', 2023, 5.22, 'Superhéroes', 'Cuaderno de historietas grapado de 48 páginas interiores en color más cubiertas que contiene la traducción del comic book original Ultimate Invasion número 1 publicado en USA por Marvel Comics\r\n\r\n¡Comienza la transformación del Universo Marvel! Jonathan Hickman, el destructor del Universo Ultimate, se une a Bryan Hitch, uno de sus más señalados creadores. ¿Su plan? Destruir, o quizás reconstruir, el Universo Marvel.', '2023-11-06 09:48:27', '2023-11-06 09:48:27'),
+	(33, ' LA BRUJA ESCARLATA 1: LA ULTIMA PUERTA', '1699264225_486211a8689851870c90.jpg', 2023, 15.67, 'Superhéroes', 'Libro de historietas encuadernado en rústica de 128 páginas interiores en color mas cubiertas con solapas que contiene la traducción de los comic books originales Scarlet Witch números 1 a 5 y Scarlet Witch Annual número 1 publicados en USA por Marvel Comics.\r\n\r\nHay una puerta que aparece solo para aquellos que más lo necesitan. Al otro lado hay una tienda de brujería. Si tu esperanza se ha ido, allí te encontrarás con... ¡La Bruja Escarlata! Wanda Maximoff está familiarizada con tocar fondo, y ahora que finalmente encontró la paz, se ha comprometido a ayudar a otros que languidecen en su punto más bajo.', '2023-11-06 09:50:25', '2023-11-06 09:50:25'),
+	(34, 'SCOTT PILGRIM. LA HORA DE LA VERDAD (SCOTT PILGRIM 6)', '1699272953_52cd46c30303390614b6.jpg', 2023, 15.99, 'Novela gráfica', 'Las conclusiones que todos esperabais: el duelo final entre Scott y Gideon. Las revelaciones sobre el pasado de Ramona. El futuro de la banda más cutremente cañera, Sex Bob-omb.\r\n\r\n \r\n¿Que será de Knives Chau? ¿Que misterio esconde Móvil, el novio de Wallace? ¿Que hay en un gato? ¿Cuántos puntos y cuántos items necesitará Scott para ganar la partida más importante de su vida?', '2023-11-06 12:15:53', '2023-11-06 12:15:53'),
+	(35, 'Boruto Two Blue Vortex', '1699965863_7450a57fa20490465dcc.jpg', 2023, 100, 'Mangas', 'ssdfsdfsfdssdfsdfsfdssdfsdfsfdssdfsdfsfdssdfsdfsfdssdfsdfsfd', '2023-11-14 12:44:23', '2023-11-14 12:44:23');
+
 -- Volcando datos para la tabla webdoc.etiquetas: ~70 rows (aproximadamente)
-INSERT INTO `etiquetas` (`id`, `nombre`, `id_categoria`) VALUES
+REPLACE INTO `etiquetas` (`id`, `nombre`, `id_categoria`) VALUES
 	(1, 'RPG', 1),
 	(2, 'FPS', 1),
 	(3, 'Aventuras', 1),
@@ -286,7 +301,7 @@ INSERT INTO `etiquetas` (`id`, `nombre`, `id_categoria`) VALUES
 	(70, 'TypeScript', 7);
 
 -- Volcando datos para la tabla webdoc.librerias: ~39 rows (aproximadamente)
-INSERT INTO `librerias` (`id`, `titulo`, `descripcion`, `ruta_archivo`, `fecha_subida`, `id_categoria`) VALUES
+REPLACE INTO `librerias` (`id`, `titulo`, `descripcion`, `ruta_archivo`, `fecha_subida`, `id_categoria`) VALUES
 	(2, 'Forza Horizon', 'Descubre un mundo de magia y misterio mientras buscas artefactos antiguos y enfrentas fuerzas oscuras en este RPG de acción.', '1699562399_1377417b771600d9c817.jpg', '2023-11-02 11:13:38', 1),
 	(4, 'Juego Supervivencia', 'Viaja en el tiempo al Japón feudal y vive la vida de un samurai, enfrentándote a dilemas morales y enemigos mortales en este juego de acción y aventura.', '1699561459_028d919ce912b74741a3.jpg', '2023-11-02 11:13:38', 1),
 	(5, 'Invasión Cibernética', 'Defiende el ciberespacio como un hacker de élite, usando habilidades de programación y tácticas de combate en este emocionante shooter en primera persona.', '1699561510_ad42e7c7bbd9253dd399.jpg', '2023-11-02 11:13:38', 1),
@@ -328,7 +343,7 @@ INSERT INTO `librerias` (`id`, `titulo`, `descripcion`, `ruta_archivo`, `fecha_s
 	(66, 'Desarrollo de Apps Móviles con Flutter', 'Dive into mobile app development using Flutter and Dart for cross-platform applications.', '1699606056_ae0af469317c1c88c3b1.jpg', '2023-11-02 11:13:38', 7);
 
 -- Volcando datos para la tabla webdoc.libro_etiqueta: ~63 rows (aproximadamente)
-INSERT INTO `libro_etiqueta` (`id`, `id_libro`, `id_etiqueta`) VALUES
+REPLACE INTO `libro_etiqueta` (`id`, `id_libro`, `id_etiqueta`) VALUES
 	(53, 4, 1),
 	(54, 4, 4),
 	(55, 4, 5),
@@ -394,7 +409,7 @@ INSERT INTO `libro_etiqueta` (`id`, `id_libro`, `id_etiqueta`) VALUES
 	(139, 2, 9);
 
 -- Volcando datos para la tabla webdoc.migrations: ~6 rows (aproximadamente)
-INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`, `batch`) VALUES
+REPLACE INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`, `batch`) VALUES
 	(17, '2022-10-15-083523', 'App\\Database\\Migrations\\Categorias', 'default', 'App', 1698919088, 1),
 	(18, '2022-10-31-121819', 'App\\Database\\Migrations\\Etiquetas', 'default', 'App', 1698919088, 1),
 	(19, '2023-10-15-190451', 'App\\Database\\Migrations\\Usuarios', 'default', 'App', 1698919088, 1),
@@ -403,7 +418,7 @@ INSERT INTO `migrations` (`id`, `version`, `class`, `group`, `namespace`, `time`
 	(22, '2023-11-02-094729', 'App\\Database\\Migrations\\CreateLibroEtiquetaTable', 'default', 'App', 1698919089, 1);
 
 -- Volcando datos para la tabla webdoc.usuarios: ~5 rows (aproximadamente)
-INSERT INTO `usuarios` (`id`, `usuario`, `imagen`, `rol`, `correo`, `contrasena`, `fecha_creacion`, `reset_token`, `reset_expiration`) VALUES
+REPLACE INTO `usuarios` (`id`, `usuario`, `imagen`, `rol`, `correo`, `contrasena`, `fecha_creacion`, `reset_token`, `reset_expiration`) VALUES
 	(1, 'admin29', '1699524498_05ad86bf9041e92eb1b5.png', 'admin', 'admin29@email.com', '$2y$10$Su00VJdrmvKBNZ2TRAkgvePrOTUTUFepYjpHSD8JKjwEZEI0fnTzW', '2023-11-02 11:24:38', NULL, NULL),
 	(2, 'usuario', '1699265366_604cc0df42e0df1f1c41.png', 'usuario', 'usuario@email.com', '$2y$10$eliDwCHDXuA4qtpRv/HVTu1xTxGV7Drlsdh/p8T/S2ezNhtMvff9S', '2023-11-03 10:51:47', NULL, NULL),
 	(3, 'Creador', '1699620021_cb4f4a1307556bb551b2.jpg', 'admin', 'antoniomanuel2b@hotmail.com', '$2y$10$/brjP8HboiPcVdo9gwKuT.PB2BUOjJeE9LtXaLqzb/6b3hGvM93ni', '2023-11-09 13:03:55', NULL, NULL),
