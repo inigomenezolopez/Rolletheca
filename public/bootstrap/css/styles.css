@@ -1,0 +1,552 @@
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-image: url("/images/background_images.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.star-rating {
+  font-size: 30px;
+  unicode-bidi: bidi-override;
+  display: flex;
+  justify-content: flex-end;
+  /* Asegura que las estrellas comienzan desde la derecha */
+}
+
+.tribute-mention {
+  color: #007bff;
+  /* Color azul para las menciones */
+  text-decoration: none;
+  /* Sin subrayado */
+}
+
+.star-rating .star {
+  display: inline-block;
+  cursor: pointer;
+  color: #ccc;
+  /* Color predeterminado de las estrellas */
+  transition: color 0.2s ease-in-out;
+  /* Agrega una transición suave al cambiar el color */
+}
+
+.star-rating .star-rating .star:hover ~ .star {
+  color: #fc0;
+  /* Color al pasar el ratón y seleccionar */
+}
+
+.star-filled {
+  color: #fc0;
+}
+
+.star-empty {
+  color: lightgray;
+}
+#miNavbar {
+  border-bottom: 2px solid #b0c7d1;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus,
+.nav .nav-link:hover,
+.nav .nav-link:focus {
+  transform: scale(1.2);
+  color: #1b2530;
+  /* O el color que prefieras */
+  transition: all 0.3s ease;
+}
+
+footer {
+  margin-top: auto;
+}
+
+img.logo {
+  height: 100px;
+  width: 100px;
+}
+
+.navbar-nav .nav-link,
+.nav .nav-link {
+  transition: all 0.3s ease;
+}
+
+/*
+Boton Publicar comentario 
+*/
+
+/*
+Boton Publicar comentario 
+*/
+.botones-accion {
+  display: flex;
+  justify-content: center; /* Ajusta a 'start' para alinear a la izquierda o 'end' para la derecha */
+  gap: 10px; /* Espacio entre los botones */
+}
+.delete-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(20, 20, 20);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+}
+
+.delete-svgIcon {
+  width: 15px;
+  transition-duration: 0.3s;
+}
+
+.delete-svgIcon path {
+  fill: white;
+}
+
+.delete-button:hover {
+  width: 100px;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: rgb(255, 69, 69);
+  align-items: center;
+}
+
+.delete-button:hover .delete-svgIcon {
+  width: 20px;
+  transition-duration: 0.3s;
+  transform: translateY(60%);
+  -webkit-transform: rotate(360deg);
+  -moz-transform: rotate(360deg);
+  -o-transform: rotate(360deg);
+  -ms-transform: rotate(360deg);
+  transform: rotate(360deg);
+}
+
+.delete-button::before {
+  display: none;
+  content: "Eliminar";
+  color: white;
+  transition-duration: 0.3s;
+  font-size: 2px;
+}
+
+.delete-button:hover::before {
+  display: block;
+  padding-right: 10px;
+  font-size: 13px;
+  opacity: 1;
+  transform: translateY(0px);
+  transition-duration: 0.3s;
+}
+.edit-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(20, 20, 20);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+  text-decoration: none !important;
+}
+
+.edit-svgIcon {
+  width: 17px;
+  transition-duration: 0.3s;
+}
+
+.edit-svgIcon path {
+  fill: white;
+}
+
+.edit-button:hover {
+  width: 100px;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: rgb(0, 128, 0); /* Cambiado a verde */
+  align-items: center;
+}
+
+.edit-button:hover .edit-svgIcon {
+  width: 20px;
+  transition-duration: 0.3s;
+  transform: translateY(60%);
+  -webkit-transform: rotate(360deg);
+  -moz-transform: rotate(360deg);
+  -o-transform: rotate(360deg);
+  -ms-transform: rotate(360deg);
+  transform: rotate(360deg);
+}
+
+.edit-button::before {
+  display: none;
+  content: "Editar";
+  color: white;
+  transition-duration: 0.3s;
+  font-size: 2px;
+}
+
+.edit-button:hover::before {
+  display: block;
+  padding-right: 10px;
+  font-size: 13px;
+  opacity: 1;
+  transform: translateY(0px);
+  transition-duration: 0.3s;
+}
+
+@keyframes fly-1 {
+  from {
+    transform: translateY(0.1em);
+  }
+
+  to {
+    transform: translateY(-0.1em);
+  }
+}
+
+.send-Button {
+  font-family: inherit;
+  font-size: 17px;
+  background: royalblue;
+  color: white;
+  padding: 0.5em 0.8em;
+  padding-left: 0.9em;
+  display: flex;
+  align-items: center;
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.send-Button span {
+  display: block;
+  margin-left: 0.3em;
+  transition: all 0.3s ease-in-out;
+}
+
+.send-Button svg {
+  display: block;
+  transform-origin: center center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.send-Button:hover .svg-wrapper {
+  animation: fly-1 0.6s ease-in-out infinite alternate;
+}
+
+.send-Button:hover svg {
+  transform: translateX(1.2em) rotate(45deg) scale(1.1);
+}
+
+.send-Button:hover span {
+  transform: translateX(5em);
+}
+
+.send-Button:active {
+  transform: scale(0.95);
+}
+
+@keyframes fly-1 {
+  from {
+    transform: translateY(0.1em);
+  }
+
+  to {
+    transform: translateY(-0.1em);
+  }
+}
+
+.addButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(20, 20, 20);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+  text-decoration: none !important;
+}
+
+.addsvgIcon {
+  width: 20px;
+  transition-duration: 0.3s;
+}
+
+.addsvgIcon path {
+  fill: white;
+}
+
+.addButton:hover {
+  width: 100px;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: rgb(0, 123, 255);
+  align-items: center;
+}
+
+.addButton:hover .addsvgIcon {
+  width: 20px;
+  transition-duration: 0.3s;
+  transform: translateY(60%);
+  -webkit-transform: rotate(360deg);
+  -moz-transform: rotate(360deg);
+  -o-transform: rotate(360deg);
+  -ms-transform: rotate(360deg);
+  transform: rotate(360deg);
+}
+
+.addButton::before {
+  display: none;
+  content: "Añadir";
+  color: white;
+  transition-duration: 0.3s;
+  font-size: 2px;
+}
+
+.addButton:hover::before {
+  display: block;
+  padding-right: 10px;
+  font-size: 13px;
+  opacity: 1;
+  transform: translateY(0px);
+  transition-duration: 0.3s;
+}
+.cancelButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(20, 20, 20);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+  text-decoration: none !important;
+}
+
+.cancelSvgIcon {
+  width: 20px;
+  transition-duration: 0.3s;
+}
+
+.cancelSvgIcon path {
+  fill: white;
+}
+
+.cancelButton:hover {
+  width: 120px; /* Un poco más ancho que el botón de añadir */
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: rgb(255, 0, 0); /* Color rojo para cancelar */
+  align-items: center;
+}
+
+.cancelButton:hover .cancelSvgIcon {
+  width: 20px;
+  transition-duration: 0.3s;
+  transform: translateY(60%) rotate(360deg);
+}
+
+.cancelButton::before {
+  display: none;
+  content: "Cancelar";
+  color: white;
+  transition-duration: 0.3s;
+  font-size: 2px;
+}
+
+.cancelButton:hover::before {
+  display: block;
+  padding-right: 10px;
+  font-size: 13px;
+  opacity: 1;
+  transform: translateY(0px);
+  transition-duration: 0.3s;
+}
+.filter {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 0, 0, 0.192);
+  cursor: pointer;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.021);
+  transition: all 0.3s;
+}
+
+.filter svg {
+  height: 16px;
+  fill: rgb(77, 77, 77);
+  transition: all 0.3s;
+}
+.filter:hover {
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.11);
+  background-color: rgb(59, 59, 59);
+}
+.filter:hover svg {
+  fill: white;
+}
+
+h1 {
+  text-align: center;
+}
+.main-content {
+  width: 30%;
+  border-radius: 20px;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.4);
+  margin: 3em auto;
+  display: flex;
+  height: auto;
+}
+
+.company__info {
+  background-color: #cbdbe5;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #fff;
+}
+
+@media screen and (max-width: 640px) {
+  .main-content {
+    width: 80%;
+  }
+
+  .company__info {
+    display: none;
+  }
+
+  .login_form {
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+  }
+}
+
+@media screen and (min-width: 642px) and (max-width: 800px) {
+  .main-content {
+    width: 60%;
+  }
+}
+
+.row > h4 {
+  color: #008080;
+}
+
+.login_form {
+  background-color: #fff;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border-top: 1px solid #cbdbe5;
+  border-right: 1px solid #cbdbe5;
+}
+
+form {
+  padding: 0 2em;
+}
+
+.form__input {
+  width: 100%;
+  border: 0px solid transparent;
+  border-radius: 0;
+  border-bottom: 1px solid #b0c7d1;
+  padding: 0.8em 0.4em 0.4em;
+  padding-left: 1.5em;
+  outline: none;
+  margin: 1em auto;
+  transition: all 0.5s ease;
+}
+
+.form__input:focus {
+  border-bottom-color: #b0c7d1;
+  box-shadow: 0 0 5px rgba(0, 80, 80, 0.4);
+  border-radius: 4px;
+}
+
+.login-Button {
+  cursor: pointer;
+  font-weight: 700;
+  color: #fff;
+  transition: all 0.2s;
+  padding: 4px 12px;
+  border-radius: 100px;
+  background: #0d6efd;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+}
+
+.login-Button:hover {
+  background: #0b5ed7;
+}
+
+.login-Button > svg {
+  width: 28px;
+  margin-left: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.login-Button:hover svg {
+  transform: translateX(5px);
+}
+
+.login-Button:active {
+  transform: scale(0.95);
+}
+.button-container {
+  display: flex;
+  justify-content: right; /* Centra horizontalmente */
+  align-items: right; /* Centra verticalmente */
+}
+.container-fluid.principal {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  min-height: 90vh; /* Altura mínima del 100% de la ventana del navegador */
+  /* Asegúrate de que no haya padding o margin que interfiera con el centrado */
+  padding: 0;
+  margin: 0;
+}
+.logo-image {
+  width: 150px;
+  height: 150px;
+}
+
+/* Estilos para pantallas pequeñas, por ejemplo, menos de 600px */
+@media screen and (max-width: 600px) {
+  .logo-image {
+    width: 100px; /* Tamaño más pequeño para dispositivos móviles */
+    height: 100px;
+  }
+}

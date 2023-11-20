@@ -96,8 +96,9 @@ class Validation extends BaseConfig
     ],
     'contrasena' => [
         'label' => 'Contraseña',
-        'rules' => 'permit_empty|min_length[8]',
+        'rules' => 'required|permit_empty|min_length[8]',
         'errors' => [
+            'required' => 'El campo {field} es obligatorio.',
             'min_length' => 'El campo {field} debe tener al menos {param} caracteres de longitud.',
         ],
     ],

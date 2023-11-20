@@ -28,7 +28,9 @@
                         </div>
                         <div class="form-group">
                             <label for="etiquetas">Etiquetas:</label>
+
                             <select name="etiquetas[]" id="etiquetas" class="form-control" multiple>
+
                                 <?php foreach ($etiqueta as $etiquetaItem) : ?>
                                 <option value="<?= $etiquetaItem->id ?>"><?= $etiquetaItem->nombre ?></option>
                                 <?php endforeach ?>

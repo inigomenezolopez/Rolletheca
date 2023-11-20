@@ -5,6 +5,7 @@ namespace App\Controllers\Dashboard;
 
 // Importaciones de modelos que interactúan con la base de datos y la clase 'BaseController'.
 use App\Models\CategoriaModel;
+use App\Models\EtiquetaModel;
 use App\Models\LibreriaModel;
 use App\Controllers\BaseController;
 
@@ -67,13 +68,57 @@ class Categoria extends BaseController
         }
     }
 
+    public function filtrarAjax($id = null)
+{
+    // Asegúrate de cargar los modelos necesarios
+    $libreriaModel = new LibreriaModel();
+    $etiquetaModel = new EtiquetaModel();
+    $categoriaModel = new CategoriaModel();
+
+     // Encuentra la categoría por su ID y devuelve error si no existe.
+     $categoria = $categoriaModel->find($id);
+     if (!$categoria) {
+          session()->setFlashdata('mensaje', 'Categoría no encontrada.');
+         return redirect()->back()->withInput();
+     }
+    // Obtener las etiquetas seleccionadas desde la solicitud
+    $etiquetasSeleccionadas = $this->request->getPost('etiquetas');
+    $todasLasEtiquetas = $etiquetaModel->where('id_categoria', $id)->findAll();
+
+    // Aplicar el filtrado si hay etiquetas seleccionadas
+    if (!empty($etiquetasSeleccionadas)) {
+        $libros = $libreriaModel->filtrarPorEtiquetasCategoria($etiquetasSeleccionadas, $id);
+    } else {
+        // Obtener las librerías por categoría sin filtrar por etiquetas
+        $libros = $libreriaModel->where('id_categoria', $id)->findAll();
+    }
+
+    // Procesar los libros para añadir valoraciones medias y etiquetas
+    foreach ($libros as $key => $libro) {
+        $libros[$key]->valoracionMedia = $libreriaModel->valoracionMedia($libro->id);
+        $libros[$key]->etiquetas = $etiquetaModel
+            ->select('etiquetas.*')
+            ->join('libro_etiqueta', 'libro_etiqueta.id_etiqueta = etiquetas.id')
+            ->where('libro_etiqueta.id_libro', $libro->id)
+            ->findAll();
+    }
+
+    // Devolver solo el fragmento de HTML con la lista de libros
+    return view('Dashboard/_partials/lista_libros', [
+        'categoria' => $categoria,
+        'libros' => $libros,
+        'pager' => $libreriaModel->pager,
+        'todasLasEtiquetas' => $todasLasEtiquetas,
+        'etiquetasSeleccionadas' => $etiquetasSeleccionadas
+    ]);
+}
     // Método para mostrar una categoría específica junto con sus libros asociados.
     public function show($id = null)
     {
         // Instancia los modelos necesarios.
         $categoriaModel = new CategoriaModel();
         $libreriaModel = new LibreriaModel();
-        $etiquetaModel = new \App\Models\EtiquetaModel(); // Modelo para las etiquetas
+        $etiquetaModel = new EtiquetaModel(); // Modelo para las etiquetas
 
         // Encuentra la categoría por su ID y devuelve error si no existe.
         $categoria = $categoriaModel->find($id);
@@ -188,5 +233,3 @@ public function delete($id = null)
     return redirect()->back();
 }
 }
-
-

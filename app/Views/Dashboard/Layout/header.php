@@ -9,48 +9,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebDoc</title>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+    <link rel="stylesheet" href="<?= base_url('/bootstrap/css/styles.css')?>" <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tributejs/5.1.3/tribute.min.js"></script>
 
     <style>
-    body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
 
-    }
-
-    #miNavbar {
-        border-bottom: 2px solid #b0c7d1;
-    }
-
-    footer {
-        margin-top: auto;
-    }
-
-    img.logo {
-        height: 100px;
-        width: 100px;
-        /* mantiene la proporción original */
-    }
-
-    .navbar-nav .nav-link:hover,
-    .navbar-nav .nav-link:focus,
-    .nav .nav-link:hover,
-    .nav .nav-link:focus {
-        transform: scale(1.2);
-        color: #1b2530;
-        /* O el color que prefieras */
-        transition: all 0.3s ease;
-    }
-
-    .navbar-nav .nav-link,
-    .nav .nav-link {
-        transition: all 0.3s ease;
-    }
     </style>
 </head>
 
@@ -69,9 +38,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="<?=route_to('inicio.index')?>">Inicio</a>
-                    </li>
+
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="<?=route_to('libreria.index')?>">Libreria</a>
                     </li>
@@ -149,22 +116,25 @@
     </nav>
 </header>
 
-<body class="d-flex flex-column min-vh-100" style="background-color: #f9fafb;">
-    <?= view('Dashboard/mensaje')?>
-    <?= view('Dashboard/error')?>
+<body>
+    <?= view('Dashboard/mensaje') ?>
+    <?= view('Dashboard/error') ?>
+
+    <?php if (!session()->get('ocultarCard')): ?>
 
     <div class="container mt-4">
-
         <div class="card">
             <div class="card-body">
                 <?= $this->renderSection('content') ?>
             </div>
         </div>
-        <div>
-        </div>
     </div>
-
+    <?php else: ?>
+    <?= $this->renderSection('content') ?>
+    <?php session()->remove('ocultarCard');?>
+    <?php endif; ?>
 </body>
+
 <footer class="bg-dark text-white py-3 mt-auto" style="background-color: #343a40;">
     <div class="container text-center">
         <p>© 2023 WebDoc. Todos los derechos reservados.</p>

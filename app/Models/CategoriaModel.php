@@ -40,15 +40,16 @@ class CategoriaModel extends Model
     protected $afterDelete    = [];
 
      /**
-     * setSlug Función para establecer el slug a partir del nombre.
-     *
-     * @param array $data Array de datos que se van a insertar o actualizar.
-     * @return array Array modificado con el slug.
-     */
-    protected function setSlug(array $data)
+ * setSlug Función para establecer el slug a partir del nombre.
+ *
+ * @param array $data Array de datos que se van a insertar o actualizar.
+ * @return array Array modificado con el slug.
+ */
+protected function setSlug(array $data)
 {
     if (isset($data['data']['nombre'])) {
-        $slug = url_title($data['data']['nombre'], '-', true); // TRUE converts the slug to lowercase
+        // TRUE convierte el slug a minúsculas
+        $slug = url_title($data['data']['nombre'], '-', true); 
         $data['data']['slug'] = $this->ensureUniqueSlug($slug);
     }
 
@@ -57,19 +58,21 @@ class CategoriaModel extends Model
 
 protected function ensureUniqueSlug($slug)
 {
-    $builder = $this->db->table('categorias'); // Assuming you have $this->db initialized to the database connection
+    // Asumiendo que tienes $this->db inicializado con la conexión a la base de datos
+    $builder = $this->db->table('categorias'); 
 
     $originalSlug = $slug;
     $counter = 1;
 
+    // Mientras que haya resultados en la base de datos para ese slug, sigue intentando.
     while ($builder->where('slug', $slug)->countAllResults() > 0) {
+        // Añade un contador al slug original para hacerlo único
         $slug = $originalSlug . '-' . $counter;
         $counter++;
     }
 
     return $slug;
 }
-
 public function getLibreriasByCategoria($categoriaName) {
     $this->db->select('*');  // Selecciona todos los campos
     $this->db->from('librerias');  // Desde la tabla "librerias"

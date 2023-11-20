@@ -2,37 +2,6 @@
 <?= $this->extend('/Dashboard/Layout/header') ?>
 
 <?= $this->section('content') ?>
-<style>
-.star-rating {
-    font-size: 30px;
-    unicode-bidi: bidi-override;
-    display: flex;
-    justify-content: flex-end;
-    /* Asegura que las estrellas comienzan desde la derecha */
-}
-
-.star-rating .star {
-    display: inline-block;
-    cursor: pointer;
-    color: #ccc;
-    /* Color predeterminado de las estrellas */
-    transition: color 0.2s ease-in-out;
-    /* Agrega una transición suave al cambiar el color */
-}
-
-.star-rating .star-rating .star:hover~.star {
-    color: #fc0;
-    /* Color al pasar el ratón y seleccionar */
-}
-
-.star-filled {
-    color: #fc0;
-}
-
-.star-empty {
-    color: lightgray;
-}
-</style>
 
 <h1>Editar Comentario</h1>
 
@@ -49,10 +18,25 @@
         <input type="hidden" name="valoracion" id="valoracion" value="<?= esc($comentario->valoracion)?>">
     </div>
     <div class="form-group">
-        <label for="contenido">Contenido</label>
+        <label for="contenido">Comentario: </label>
         <textarea name="contenido" id="contenido" class="form-control"><?= esc($comentario->contenido) ?></textarea>
     </div>
-    <button type="submit" class="btn btn-primary">Actualizar</button>
+    <br>
+    <div class="botones-accion">
+        <button class="send-Button">
+            <div class="svg-wrapper-1">
+                <div class="svg-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="23" height="23">
+                        <path fill="none" d="M0 0h24v24H0z"></path>
+                        <path fill="currentColor"
+                            d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+            <span>Send</span>
+        </button>
+    </div>
     <a href="<?= base_url('/libreria/ver/' . $comentario->id_libro) ?>" class="btn btn-secondary">Cancelar</a>
 </form>
 

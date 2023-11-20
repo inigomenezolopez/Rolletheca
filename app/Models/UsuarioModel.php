@@ -48,4 +48,7 @@ function contrasenaVerificar($contrasenaPlano,$contrasenaHash)
 {
     return password_verify($contrasenaPlano,$contrasenaHash);
 }
+
+
+
 }

@@ -47,4 +47,10 @@ class ComentarioModel extends Model
                     ->orderBy('comentarios.fecha_publicacion', 'DESC')
                     ->findAll();
     }
+    public function buscarComentariosDelLibro($termino, $libroId)
+    {
+        return $this->where('id_libro', $libroId)
+                    ->like('contenido', $termino)
+                    ->findAll();
+    }
 }

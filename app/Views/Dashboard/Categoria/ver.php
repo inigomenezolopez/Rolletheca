@@ -9,72 +9,64 @@
 </div>
 
 <!-- Botón para mostrar/ocultar el filtro de etiquetas -->
-<button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#filtroEtiquetas"
-    aria-expanded="false" aria-controls="filtroEtiquetas">
-    Filtrar por etiquetas
-</button>
 
+<button title="filter" class="filter" data-bs-toggle="collapse" data-bs-target="#filtroEtiquetas" aria-expanded="false"
+    aria-controls="filtroEtiquetas">
+    <svg viewBox="0 0 512 512" height="1em">
+        <path
+            d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7 0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z">
+        </path>
+    </svg>
+</button>
+<br>
 <!-- Contenedor desplegable para las opciones de filtrado -->
 <div class="collapse" id="filtroEtiquetas">
-    <form action="<?= site_url('categoria/ver/' . $categoria->id) ?>" method="get">
+    <form id="filtroEtiquetasForm" action="<?= site_url('categoria/ver/' . $categoria->id) ?>" method="get">
         <div class="mb-3">
             <?php foreach($todasLasEtiquetas as $etiqueta): ?>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="etiquetas[]" value="<?= esc($etiqueta->id) ?>"
-                    id="etiqueta<?= $etiqueta->id ?>">
-                <label class="form-check-label" for="etiqueta<?= $etiqueta->id ?>"><?= esc($etiqueta->nombre) ?></label>
+                <input class="form-check-input checkboxFiltro" type="checkbox" name="etiquetas[]"
+                    value="<?= esc($etiqueta->id) ?>" id="etiqueta<?= $etiqueta->id ?>">
+                <span class="checkboxLabel inactivo"
+                    data-checkbox-id="etiqueta<?= $etiqueta->id ?>"><?= esc($etiqueta->nombre) ?></span>
             </div>
             <?php endforeach; ?>
         </div>
-        <button type="submit" class="btn btn-secondary btn-sm">Aplicar Filtro</button>
     </form>
 </div>
 
+
 <hr>
 
-<div class="row">
-    <?php foreach ($libros as $libro): ?>
-    <div class="col-lg-4 col-md-6 mb-4">
-        <div class="card h-100 border border-1 shadow-sm">
-            <img src="/images/libreria/<?= esc($libro->ruta_archivo) ?>" class="card-img-top" alt="Imagen del libro"
-                style="height: 200px; width: 100%; object-fit: cover;">
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title"><?= esc($libro->titulo) ?></h5>
-                <p class="card-text"><?= esc($libro->descripcion) ?></p>
-                <p class="card-text text-muted small"><?= esc($libro->fecha_subida) ?></p>
-                <div class="mb-3">
-                    <?php foreach ($libro->etiquetas as $etiqueta): ?>
-                    <span class="badge bg-secondary"><?= esc($etiqueta->nombre) ?></span>
-                    <?php endforeach; ?>
-                </div>
-                <div class="stars my-2">
-                    <?php for ($i = 1; $i <= 5; $i++): ?>
-                    <i class="<?= $i <= $libro->valoracionMedia ? 'fas fa-star text-warning' : 'far fa-star'; ?>"></i>
-                    <?php endfor; ?>
-                    <span class="valoracion-texto ms-2">(<?= number_format($libro->valoracionMedia, 1) ?>)</span>
-                </div>
-                <div class="mt-auto">
-                    <a href="/libreria/ver/<?= esc($libro->id) ?>" class="btn btn-primary btn-sm">Ver</a>
-                    <?php if (session('usuario')->rol == 'admin'): ?>
-                    <a href="/libreria/editar/<?= esc($libro->id) ?>" class="btn btn-secondary btn-sm">Editar</a>
-                    <form action="/libreria/eliminar/<?= esc($libro->id) ?>" method="post"
-                        style="display: inline-block;">
-                        <button type="submit" class="btn btn-danger btn-sm"
-                            onclick="return confirm('¿Estás seguro de que deseas eliminar este libro?');">
-                            Borrar
-                        </button>
-                    </form>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php endforeach; ?>
+<div class="row" id="contenedorLibros">
+    <?= $this->include('Dashboard/_partials/lista_libros') ?>
 </div>
 
 
 <?= $pager->links() ?>
 
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var checkboxes = document.querySelectorAll('.form-check-input');
 
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            var formData = new FormData(document.getElementById('filtroEtiquetasForm'));
+
+            fetch('/categoria/filtrar/<?= esc($categoria->id) ?>', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(data => {
+                    // Actualizar la parte de tu página con los nuevos resultados
+                    document.getElementById('contenedorLibros').innerHTML = data;
+
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    });
+});
+</script>
 <?= $this->endSection() ?>

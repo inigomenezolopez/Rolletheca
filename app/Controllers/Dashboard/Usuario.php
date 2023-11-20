@@ -36,9 +36,9 @@ class Usuario extends BaseController
         // Comprobar si se ha excedido el número de intentos de inicio de sesión y aplicar un bloqueo temporal si es necesario.
         if (isset($login_attempts[$ipAddress]) && $login_attempts[$ipAddress]['count'] >= 3) {
             $last_attempt_time = $login_attempts[$ipAddress]['time'];
-            if ($current_time - $last_attempt_time < 200) {
+            if ($current_time - $last_attempt_time < 1) {
                 // Si el último intento fue hace menos de 5 minutos, redirige con un mensaje de error.
-                return redirect()->back()->with('errors', 'Demasiados intentos fallidos. Por favor, espera 5 minutos antes de intentar nuevamente.');
+                return redirect()->back()->with('error', 'Demasiados intentos fallidos. Por favor, espera 5 minutos antes de intentar nuevamente.');
             }
         }
     
@@ -106,7 +106,7 @@ function register_post() {
     session()->setFlashdata([
         'validation'=>$this->validator
     ]);
-    return redirect()->back()->withInput();
+    return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 }
 
 // Método para cerrar sesión del usuario.

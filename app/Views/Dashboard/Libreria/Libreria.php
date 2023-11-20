@@ -6,51 +6,25 @@
 <hr>
 
 <?php if (session('usuario')->rol == 'admin'): ?>
-<div class="mb-3 text-end">
-    <a href="/libreria/crear" role="button" class="btn btn-success">Agregar Nuevo Libro</a>
-</div>
-<?php endif; ?>
 
-<div class="row">
+<a href="/libreria/crear" class="addButton">
 
-    <?php foreach ($libros as $libro): ?>
-    <div class="col-lg-4 col-md-6 mb-4">
-        <div class="card h-100 border border-1 shadow-sm">
-            <img src="/images/libreria/<?= esc($libro->ruta_archivo) ?>" class="card-img-top" alt="Imagen del libro"
-                style="height: 200px; width: 100%; object-fit: cover;">
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title"><?= esc($libro->titulo) ?></h5>
-                <h6 class="card-subtitle mb-2 text-muted"><?= esc($libro->categoria) ?></h6>
-                <p class="card-text"><?= esc($libro->descripcion) ?></p>
-                <p class="card-text text-muted small"><?= esc($libro->fecha_subida) ?></p>
-                <div class="mb-3">
-                    <?php foreach ($libro->etiquetas as $etiqueta): ?>
-                    <span class="badge bg-secondary"><?= esc($etiqueta->nombre) ?></span>
-                    <?php endforeach; ?>
-                </div>
-                <div class="stars my-2">
-                    <?php for ($i = 1; $i <= 5; $i++): ?>
-                    <i class="<?= $i <= $libro->valoracionMedia ? 'fas fa-star text-warning' : 'far fa-star'; ?>"></i>
-                    <?php endfor; ?>
-                    <span class="valoracion-texto ms-2">(<?= number_format($libro->valoracionMedia, 1) ?>)</span>
-                </div>
-                <div class="mt-auto">
-                    <a href="/libreria/ver/<?= esc($libro->id) ?>" class="btn btn-primary btn-sm">Ver</a>
-                    <?php if (session('usuario')->rol == 'admin'): ?>
-                    <a href="/libreria/editar/<?= esc($libro->id) ?>" class="btn btn-secondary btn-sm">Editar</a>
-                    <form action="/libreria/eliminar/<?= esc($libro->id) ?>" method="post"
-                        style="display: inline-block;">
-                        <button type="submit" class="btn btn-danger btn-sm"
-                            onclick="return confirm('¿Estás seguro de que quieres eliminar este libro?');">
-                            Borrar
-                        </button>
-                    </form>
-                    <?php endif; ?>
-                </div>
-            </div>
+    <div class="svg-wrapper-1">
+        <div class="svg-wrapper">
+            <svg class="addsvgIcon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                viewBox="0 0 20 23">
+                <path
+                    d="M9.546.5a9.5 9.5 0 1 0 9.5 9.5 9.51 9.51 0 0 0-9.5-9.5ZM13.788 11h-3.242v3.242a1 1 0 1 1-2 0V11H5.304a1 1 0 0 1 0-2h3.242V5.758a1 1 0 0 1 2 0V9h3.242a1 1 0 1 1 0 2Z" />
+            </svg>
         </div>
     </div>
-    <?php endforeach; ?>
+
+</a>
+<?php endif; ?>
+<br>
+
+<div class="row">
+    <?= $this->include('Dashboard/_partials/lista_libros') ?>
 </div>
 
 <?= $pager->links() ?>

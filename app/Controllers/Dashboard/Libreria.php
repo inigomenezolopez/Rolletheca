@@ -172,7 +172,12 @@ public function show($id = null)
                                      ->join('etiquetas', 'etiquetas.id = libro_etiqueta.id_etiqueta')
                                      ->findAll();
     // Agrega las etiquetas al objeto del libro
-    $libro->etiquetas = $etiquetas;
+    if ($libro !== null) {
+        $libro->etiquetas = $etiquetas;
+    } else {
+        session()->setFlashdata('mensaje', 'Libro borrado correctamente');
+         return redirect()->to('/libreria');
+    }
 
     // Imprime la vista 'ver' del dashboard de librería con todos los datos recolectados
     echo view('Dashboard/Libreria/ver', [

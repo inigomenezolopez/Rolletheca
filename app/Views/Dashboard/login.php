@@ -1,92 +1,20 @@
 <?= $this->extend('/Dashboard/Layout/header') ?>
+<?php session()->set('ocultarCard', true);?>
 
 
 
-<?= $this->Section('content') ?>
-<style>
-.main-content {
-    width: 50%;
-    border-radius: 20px;
-    box-shadow: 0 5px 5px rgba(0, 0, 0, .4);
-    margin: 5em auto;
-    display: flex;
-}
 
-.company__info {
-    background-color: #cbdbe5;
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    color: #fff;
-}
 
-@media screen and (max-width: 640px) {
-    .main-content {
-        width: 90%;
-    }
 
-    .company__info {
-        display: none;
-    }
-
-    .login_form {
-        border-top-left-radius: 20px;
-        border-bottom-left-radius: 20px;
-    }
-}
-
-@media screen and (min-width: 642px) and (max-width:800px) {
-    .main-content {
-        width: 70%;
-    }
-}
-
-.row>h3 {
-    color: #008080;
-}
-
-.login_form {
-    background-color: #fff;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
-    border-top: 1px solid #cbdbe5;
-    border-right: 1px solid #cbdbe5;
-}
-
-form {
-    padding: 0 2em;
-}
-
-.form__input {
-    width: 100%;
-    border: 0px solid transparent;
-    border-radius: 0;
-    border-bottom: 1px solid #b0c7d1;
-    padding: 1em .5em .5em;
-    padding-left: 2em;
-    outline: none;
-    margin: 1.5em auto;
-    transition: all .5s ease;
-}
-
-.form__input:focus {
-    border-bottom-color: #b0c7d1;
-    box-shadow: 0 0 5px rgba(0, 80, 80, .4);
-    border-radius: 4px;
-}
-</style>
-
+<?= $this->section('content') ?>
 
 
 <body>
 
-    <div class="container-fluid">
+    <div class="container-fluid principal">
         <div class="row main-content bg-success text-center">
             <div class="col-md-4 text-center company__info">
-                <span class="company__logo"><img src="/images/logo.jpeg" style="width: 150px;
-	height: 150px;" alt=""></span>
+                <span class="company__logo"><img src="/images/logo.jpeg" class="logo-image" alt=""></span>
 
             </div>
             <div class="col-md-8 col-xs-12 col-sm-12 login_form ">
@@ -106,22 +34,32 @@ form {
                                     placeholder="Contraseña">
                             </div>
                             <br>
-                            <div class="row">
-                                <input type="submit" value="Iniciar Sesión" class="btn btn-primary">
-                            </div>
+                            <div class="button-container">
+                                <button class="login-Button">
+                                    <span>Iniciar Sesión</span>
+                                    <svg width=" 34" height="34" viewBox="0 0 74 74" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="37" cy="37" r="35.5" stroke="white" stroke-width="5"></circle>
+                                        <path
+                                            d="M25 35.5C24.1716 35.5 23.5 36.1716 23.5 37C23.5 37.8284 24.1716 38.5 25 38.5V35.5ZM49.0607 38.0607C49.6464 37.4749 49.6464 36.5251 49.0607 35.9393L39.5147 26.3934C38.9289 25.8076 37.9792 25.8076 37.3934 26.3934C36.8076 26.9792 36.8076 27.9289 37.3934 28.5147L45.8787 37L37.3934 45.4853C36.8076 46.0711 36.8076 47.0208 37.3934 47.6066C37.9792 48.1924 38.9289 48.1924 39.5147 47.6066L49.0607 38.0607ZM25 38.5L48 38.5V35.5L25 35.5V38.5Z"
+                                            fill="white"></path>
+                                    </svg>
+                                </button>
+
                         </form>
                     </div>
-                    <br>
-                    <div class="row">
-                        <p>¿No tienes cuenta? <a href="<?= route_to('usuario.register')?>">Registrate aquí</a></p>
-                    </div>
-                    <div class="row">
-                        <p>¿Olvidaste tu contraseña? <a href="<?= base_url('recuperar-contrasena') ?>">Restablecer
-                                contraseña</a></p>
-                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <p>¿No tienes cuenta? <a href="<?= route_to('usuario.register')?>">Registrate aquí</a></p>
+                </div>
+                <div class="row">
+                    <p>¿Olvidaste tu contraseña? <a href="<?= base_url('recuperar-contrasena') ?>">Restablecer
+                            contraseña</a></p>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
 </body>

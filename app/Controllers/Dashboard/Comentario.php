@@ -4,6 +4,7 @@
 namespace App\Controllers\Dashboard;
 
 // Importar las clases necesarias que se utilizarán en este controlador.
+use App\Models\UsuarioModel;
 use App\Models\ComentarioModel;
 use App\Controllers\BaseController;
 use CodeIgniter\I18n\Time;
@@ -123,5 +124,17 @@ class Comentario extends BaseController
                 return redirect()->back()->with('mensaje', 'Comentario borrado correctamente.');
             }
         }
+    }
+
+    // Método para buscar comentarios
+    public function buscarComentario()
+    {
+        $libroId = $this->request->getGet('id_libro');
+        $query = $this->request->getGet('q');
+        
+        $comentarioModel = new ComentarioModel();
+        $comentarios = $comentarioModel->buscarComentariosDelLibro($query, $libroId);
+
+        return $this->response->setJSON($comentarios);
     }
 }

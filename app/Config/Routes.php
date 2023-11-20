@@ -74,6 +74,7 @@ $routes->post('restablecer-contrasena-proceso', 'Usuario::procesarRestablecimien
 
     // Ruta para ver el detalle de un artículo específico (por ID)
     $routes->get('categoria/ver/(:num)', 'categoria::show/$1');
+    $routes->post('categoria/filtrar/(:num)', 'categoria::filtrarAjax/$1');
 
     // Ruta para ver el formulario de edición de un artículo
     $routes->get('categoria/editar/(:num)', 'categoria::edit/$1');
@@ -85,8 +86,9 @@ $routes->post('restablecer-contrasena-proceso', 'Usuario::procesarRestablecimien
     $routes->post('categoria/eliminar/(:num)', 'categoria::delete/$1');
 
     $routes->get('usuario/mi-perfil', '\App\Controllers\Dashboard\usuario::mostrarPerfil', ['as'=> 'usuario.mostrarPerfil']);
-$routes->post('usuario/actualizar-perfil', '\App\Controllers\Dashboard\usuario::actualizarperfil', ['as'=> 'usuario.actualizarperfil']);
+    $routes->post('usuario/actualizar-perfil', '\App\Controllers\Dashboard\usuario::actualizarperfil', ['as'=> 'usuario.actualizarperfil']);
 
+    $routes->get('/buscar-comentario', 'Comentario::buscarComentario');
 
     
 });
