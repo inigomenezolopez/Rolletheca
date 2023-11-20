@@ -31,6 +31,9 @@ class Comentarios extends Migration
             'fecha_publicacion' => [
                 'type'=>'DATETIME',
             ],
+            'valoracion' => [
+                'type'=>'INT',
+            ],
         ]);
         
         $this->forge->addKey('id', true);

@@ -29,15 +29,7 @@ class Librerias extends Migration
             'constraint'=> 500,
             
         ],
-        'formato'=>[
-            'type'=>'VARCHAR',
-            'constraint'=> 50,
-            
-        ],
-        'tamano'=>[
-            'type'=>'FLOAT',
-            'unsigned'=>TRUE,
-        ],
+        
         'fecha_subida'=>[
             'type'=>'DATETIME',
             
