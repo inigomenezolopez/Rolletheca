@@ -12,5 +12,6 @@ class TodoSeeder extends Seeder
         $this->call('EtiquetaSeeder');
         $this->call('LibreriaSeeder');
         
+        
     }
 }

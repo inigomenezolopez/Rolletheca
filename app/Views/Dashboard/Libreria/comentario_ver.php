@@ -5,18 +5,15 @@
 
 <h1>Editar Comentario</h1>
 
-
-
 <form action="<?= site_url('/libreria/actualizar/comentario/' . $comentario->id) ?>" method="post">
     <?= csrf_field() ?>
-    <div class="star-rating">
-        <span class="star" data-value="1">&#9733;</span>
-        <span class="star" data-value="2">&#9733;</span>
-        <span class="star" data-value="3">&#9733;</span>
-        <span class="star" data-value="4">&#9733;</span>
-        <span class="star" data-value="5">&#9733;</span>
+    <div class="d-flex justify-content-end mb-3">
+        <button type="button" class="btn btn-outline-primary" id="likeButton">
+            <i class="far fa-thumbs-up" id="likeIcon"></i> Like
+        </button>
         <input type="hidden" name="valoracion" id="valoracion" value="<?= esc($comentario->valoracion)?>">
     </div>
+
     <div class="form-group">
         <label for="contenido">Comentario: </label>
         <textarea name="contenido" id="contenido" class="form-control"><?= esc($comentario->contenido) ?></textarea>
@@ -40,45 +37,20 @@
     <a href="<?= base_url('/libreria/ver/' . $comentario->id_libro) ?>" class="btn btn-secondary">Cancelar</a>
 </form>
 
-
-
 <script>
-document.addEventListener('DOMContentLoaded', (event) => {
-    // Obtén el valor de la valoración del input oculto
-    const valoracion = document.getElementById('valoracion').value;
-
-    // Selecciona todas las estrellas
-    const stars = document.querySelectorAll('.star');
-
-    // Llena las estrellas hasta la valoración
-    stars.forEach((star, index) => {
-        if (index < valoracion) {
-
-            star.classList.add('star-filled');
-        }
-    });
+document.getElementById('likeButton').addEventListener('click', function() {
+    this.classList.toggle('btn-primary');
+    this.classList.toggle('text-white');
+    document.getElementById('valoracion').value = this.classList.contains('btn-primary') ? 1 : 0;
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    var stars = document.querySelectorAll('.star');
-    stars.forEach(function(star, index) {
-        star.addEventListener('click', function() {
-            setRating(index +
-                1); // Pasamos el índice + 1 para representar el número de estrellas
-        });
-    });
-
-    function setRating(ratingValue) {
-        var stars = document.querySelectorAll('.star');
-        document.getElementById('valoracion').value =
-            ratingValue; // Establecemos el valor antes de cambiar colores para mantener la lógica correcta
-        stars.forEach(function(star, index) {
-            if (index < ratingValue) {
-                star.style.color = '#fc0'; // Estrellas seleccionadas
-            } else {
-                star.style.color = '#ccc'; // Estrellas no seleccionadas
-            }
-        });
+// Añade este código para reflejar el estado actual del "like" del usuario
+window.addEventListener('DOMContentLoaded', (event) => {
+    var likeButton = document.getElementById('likeButton');
+    var valoracion = document.getElementById('valoracion').value;
+    if (valoracion > 0) {
+        likeButton.classList.add('btn-primary');
+        likeButton.classList.add('text-white');
     }
 });
 </script>

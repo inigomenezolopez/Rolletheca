@@ -22,7 +22,7 @@ class Libreria extends BaseController
         // Instancia los modelos necesarios para operar con la base de datos
         $libreriaModel = new LibreriaModel();
         $libroEtiquetaModel = new LibreriaEtiquetaModel();
-        $etiquetaModel = new \App\Models\EtiquetaModel(); // Modelo para las etiquetas
+        $etiquetaModel = new EtiquetaModel(); // Modelo para las etiquetas
 
            // Verifica si hay parámetros de filtro de etiquetas y aplica el filtro si es necesario
     $etiquetasSeleccionadas = $this->request->getGet('etiquetas') ?? [];
@@ -140,7 +140,7 @@ public function filtrarPorEtiquetas()
     // Recupera las etiquetas seleccionadas del parámetro GET 'etiquetas' o asigna un array vacío si no hay ninguna
     $etiquetasSeleccionadas = $this->request->getGet('etiquetas') ?? [];
     // Instancia el modelo de libros
-    $libroModel = new \App\Models\LibroModel();
+    $libroModel = new LibreriaModel();
 
     // Llama al método del modelo para obtener libros filtrados por las etiquetas seleccionadas
     $libros = $libroModel->filtrarPorEtiquetas($etiquetasSeleccionadas);
@@ -295,7 +295,7 @@ public function show($id = null)
      public function mostrarLibreriasPorCategoria($categoriaName) {
          $libreriaModel = new LibreriaModel;
          // Obtener las librerías que pertenecen a una categoría específica.
-         $data['librerias'] = $this->LibreriaModel->getLibreriasByCategoria($categoriaName);
+         $data['librerias'] = $this->$libreriaModel->getLibreriasByCategoria($categoriaName);
          // Pasar los datos a la vista correspondiente.
          return view('/categoria/ver/', $data);
      }

@@ -29,9 +29,8 @@
                         </div>
 
                         <div class="row">
-
-                            <input type="password" name="contrasena" id="contrasena" class="form__input"
-                                placeholder="Contraseña">
+                            <input type="password" name="contrasena" id="contrasena" class="form__input" placeholder="Contraseña">
+                            <small id="passwordHelp" class="form-text text-muted">La contraseña debe tener al menos 8 caracteres.</small>
                         </div>
                         <br>
                         <div class="button-container">
@@ -56,4 +55,17 @@
     </div>
 </div>
 </div>
+
+<script>
+document.getElementById('contrasena').addEventListener('input', function() {
+    var password = this.value;
+    var passwordHelp = document.getElementById('passwordHelp');
+    if (password.length >= 8) { 
+        passwordHelp.style.display = 'none';
+    } else {
+        passwordHelp.style.display = 'block';
+    }
+});
+</script>
+
 <?= $this->endSection() ?>

@@ -2,7 +2,10 @@
 
 <?= $this->section('content') ?>
 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
 <h1 class="mb-4 text-center">Librería</h1>
+
 <hr>
 
 <?php if (session('usuario')->rol == 'admin'): ?>

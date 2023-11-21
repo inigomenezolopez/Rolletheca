@@ -128,7 +128,7 @@ class Validation extends BaseConfig
 ],
 ],
 ];
-   public $comentarioReglas =  [
+   public $comentarioReglas =  [ // he quitado que sea requerida la valoración.
     'contenido' => [
         'rules' => 'required|min_length[3]',
         'errors' => [
@@ -136,13 +136,7 @@ class Validation extends BaseConfig
             'min_length' => 'El campo contenido debe tener al menos 3 caracteres de longitud.',
         ],
     ],
-    'valoracion' => [
-        'rules' => 'required|numeric|greater_than[0]',
-        'errors' => [
-            'required' => 'El campo valoración es obligatorio.',
-            
-        ],
-    ],
+    
     
 ];
 
